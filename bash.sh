@@ -36,6 +36,7 @@ mkfs.ext4 /dev/vgWeb/lvol0
 
 # Mount the new file system at /mnt/web, this mount must occur autamitically when s01 is rebooted
 mkdir /mnt/web
+mount /dev/vgWeb/lvol0 /mnt/web
 
 # Add the following line to /etc/fstab:
 # /dev/vgWeb/lvol0 /mnt/web ext4 defaults 0 2
