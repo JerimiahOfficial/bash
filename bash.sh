@@ -48,9 +48,8 @@ chmod 2770 /mnt/web
 # Install the web server and wget packages on s01
 yum install httpd -y
 
-# Install weg from https://csunix.mohawkcollege.ca/~long/courses/LinAdmin/wget/wget-1.19.5-10.el8.x86_64.rpm
-# download it to /tmp and install it
-curl -o /tmp/wget-1.19.5-10.el8.x86_64.rpm https://csunix.mohawkcollege.ca/~long/courses/LinAdmin/wget/wget-1.19.5-10.el8.x86_64.rpm
+# Install wget on s01
+yum install /tmp/wget-1.19.5-10.el8.x86_64.rpm -y
 
 # Configure the web server to start automatically at boot
 systemctl enable httpd
