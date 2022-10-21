@@ -1,7 +1,7 @@
 #!/bin/bash
-
-# WARNING:
-# Please make sure you have created Two 2 GB disks on s01 before running this script.
+# WARNING before running:
+#   Please make sure you have created Two 2 GB disks on s01.
+#   You also have to establish a connection to the s01 server.
 cd ~/Downloads
 
 # Curl both wget and sshpass
@@ -19,7 +19,7 @@ echo "userpass" | sudo -S -k yum install wget-1.19.5-10.el8.x86_64.rpm -y
 echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y
 
 # sshpass and scp downloads to s01 and ssh to s01
-sshpass -p "adminpass" scp ~/Downloads/{wget*,host*,fresh*} root@s01:/tmp
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/{wget*,host*,fresh*} root@s01:/tmp
 sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
 
 # Run fresh_check.sh in /tmp
