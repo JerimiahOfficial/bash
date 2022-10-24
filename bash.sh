@@ -11,10 +11,10 @@ curl -O https://vault.centos.org/centos/8/AppStream/x86_64/os/Packages/wget-1.19
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 
 # Chmod downloaded files
-chmod +wrx fresh_check.sh
-chmod +wrx host_info_t1.sh
-chmod +wrx wget-1.19.5-10.el8.x86_64.rpm
-chmod +wrx sshpass-1.05-1.el7.rf.x86_64.rpm
+chmod +rwx fresh_check.sh
+chmod +rwx host_info_t1.sh
+chmod +rwx wget-1.19.5-10.el8.x86_64.rpm
+chmod +rwx sshpass-1.05-1.el7.rf.x86_64.rpm
 
 # Install wget and sshpass
 echo "userpass" | sudo -S -k yum install wget-1.19.5-10.el8.x86_64.rpm -y
@@ -22,15 +22,17 @@ echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y
 
 # sshpass and scp downloads to s01 and ssh to s01
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/{wget*,host*,fresh*} root@s01:/tmp
+
+# sshpass into s01 and run the following commands
 sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
 
 # Run fresh_check.sh in /tmp
 cd /tmp
 
-# Chmod +wrx for fresh_check.sh, host_info_t1.sh, wget-1.19.5-10.el8.x86_64.rpm
-chmod +wrx /tmp/fresh_check.sh
-chmod +wrx /tmp/host_info_t1.sh
-chmod +wrx /tmp/wget-1.19.5-10.el8.x86_64.rpm
+# Chmod +rwx for fresh_check.sh, host_info_t1.sh, wget-1.19.5-10.el8.x86_64.rpm
+chmod +rwx /tmp/fresh_check.sh
+chmod +rwx /tmp/host_info_t1.sh
+chmod +rwx /tmp/wget-1.19.5-10.el8.x86_64.rpm
 
 # Run fresh_check.sh
 /tmp/fresh_check.sh
@@ -92,6 +94,7 @@ echo "30 23 * * * root systemctl stop httpd" > /etc/cron.d/web
 # run host_info_t1.sh
 /tmp/host_info_t1.sh
 
+# End of sshpass
 EOF
 
 # Scp s01_report_services.html from root's temp directory to your tmp
