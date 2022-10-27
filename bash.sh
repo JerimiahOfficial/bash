@@ -90,6 +90,7 @@ echo "Amita and Andy" > /var/www/html/index.html
 
 # Create a cron file named /etc/cron.d/web that stops httpd each evening at 23:30 and restarts it the next morning at 07:00.
 echo "30 23 * * * root systemctl stop httpd" > /etc/cron.d/web
+echo "0 7 * * * root systemctl start httpd" >> /etc/cron.d/web
 
 # run host_info_t1.sh
 /tmp/host_info_t1.sh
