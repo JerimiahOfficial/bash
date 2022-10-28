@@ -2,7 +2,6 @@
 
 # WARNING before running:
 #   Please make sure you have created Two 2 GB disks on s01.
-#   You also have to establish a connection to the s01 server.
 
 # Cd to downloads
 cd ~/Downloads
