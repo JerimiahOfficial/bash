@@ -10,8 +10,8 @@ cd ~/Downloads
 # Curl all the files needed for the test
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/fresh_check.sh
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/host_info_t1.sh
-curl -O https://github.com/JerimiahOfficial/bash/raw/main/wget-1.19.5-10.el8.x86_64.rpm
-curl -O https://github.com/JerimiahOfficial/bash/raw/main/sshpass-1.05-1.el7.rf.x86_64.rpm
+curl -O https://vault.centos.org/centos/8/AppStream/x86_64/os/Packages/wget-1.19.5-10.el8.x86_64.rpm
+curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 
 # Chmod downloaded files
 chmod +rwx fresh_check.sh
