@@ -17,7 +17,6 @@ chmod +rwx wget-1.19.5-10.el8.x86_64.rpm
 chmod +rwx sshpass-1.05-1.el7.rf.x86_64.rpm
 
 # Install wget and sshpass
-echo "userpass" | sudo -S -k yum install wget-1.19.5-10.el8.x86_64.rpm -y
 echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y
 
 # sshpass and scp downloads to s01 and ssh to s01
@@ -75,7 +74,6 @@ echo "/dev/vgWeb/lvol0 /mnt/web ext4 defaults 0 2" >> /etc/fstab
 
 # Configure /mnt/web to be used by the web group to share files.
 chown root:web /mnt/web
-chmod 2770 /mnt/web
 
 # Install the web server and wget packages on s01
 yum install httpd -y
