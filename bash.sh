@@ -86,7 +86,6 @@ yum install /tmp/wget-1.19.5-10.el8.x86_64.rpm -y
 # Configure the web server to start automatically at boot and start the web server
 systemctl enable httpd
 systemctl start httpd
-sleep 1
 
 # Configure s01 such that the default web page contains the message, Amita and Andy. Formatting is not important.
 echo "Amita and Andy" > /var/www/html/index.html
