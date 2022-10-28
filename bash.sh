@@ -1,7 +1,10 @@
 #!/bin/bash
+
 # WARNING before running:
 #   Please make sure you have created Two 2 GB disks on s01.
 #   You also have to establish a connection to the s01 server.
+
+# Cd to downloads
 cd ~/Downloads
 
 # Curl all the files needed for the test
@@ -74,6 +77,7 @@ echo "/dev/vgWeb/lvol0 /mnt/web ext4 defaults 0 2" >> /etc/fstab
 
 # Configure /mnt/web to be used by the web group to share files.
 chown root:web /mnt/web
+chmod 2770 /mnt/web
 
 # Install the web server and wget packages on s01
 yum install httpd -y
