@@ -126,7 +126,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 EOF
 
 # scp the results to the local machine
-sshpass -p "adminpass" scp -o StrictHostKeyChecking=no root@s01:/tmp/host_info_nfs.html /tmp
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no root@s01:/tmp/s01_report_nfs.html /tmp
 
 # open the results
 nohup firefox /tmp/s01_report_nfs.html &
