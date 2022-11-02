@@ -7,37 +7,37 @@ echo "userpass" | sudo -S -k yum install sshpass*.rpm -y -q
 echo "userpass" | sudo -S -k yum install nfs-utils -y -q
 
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
-sshpass -p "adminpass" ssh root@s01 /bin/sh <EOF
-yum install nfs-utils -y -q
-yum install net-tools -y -q
+sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
+    yum install nfs-utils -y -q
+    yum install net-tools -y -q
 
-firewall-cmd --permanent --add-service=nfs3
-firewall-cmd --reload
+    firewall-cmd --permanent --add-service=nfs3
+    firewall-cmd --reload
 
-systemctl enable --now nfs-server
+    systemctl enable --now nfs-server
 
-useradd -u 2000 margaret
-useradd -u 2001 katherine
+    useradd -u 2000 margaret
+    useradd -u 2001 katherine
 
-groupadd research
-usermod -a -G research margaret
-usermod -a -G research katherine
+    groupadd research
+    usermod -a -G research margaret
+    usermod -a -G research katherine
 
-mkdir -p /nfs_shares/scratch
-mkdir -p /nfs_shares/research
-mkdir -p /nfs_shares/pub
+    mkdir -p /nfs_shares/scratch
+    mkdir -p /nfs_shares/research
+    mkdir -p /nfs_shares/pub
 
-echo "/nfs_shares/scratch w01(rw)" >>/etc/exports
-echo "/nfs_shares/research w01(rw,no_root_squash,all_squash,anongid=2002)" >>/etc/exports
-echo "/nfs_shares/pub w01(rw)" >>/etc/exports
+    echo "/nfs_shares/scratch w01(rw)" >>/etc/exports
+    echo "/nfs_shares/research w01(rw,no_root_squash,all_squash,anongid=2002)" >>/etc/exports
+    echo "/nfs_shares/pub w01(rw)" >>/etc/exports
 
-chgrp research /nfs_shares/research
-chmod 1770 /nfs_shares/research
+    chgrp research /nfs_shares/research
+    chmod 1770 /nfs_shares/research
 
-usermod -l w01_guest nobody
-groupmod -n w01_guest nobody
+    usermod -l w01_guest nobody
+    groupmod -n w01_guest nobody
 
-exportfs -r
+    exportfs -r
 EOF
 
 # Create the users margaret and katherine on w01
@@ -88,18 +88,11 @@ echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/margaret" margaret
 echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/katherine" katherine
 
 # excute the script on s01
-sshpass -p "adminpass" ssh root@s01 /bin/sh <EOF
-
-# cd to the directory where the script is located
-cd /tmp
-
-# change the permissions of the script
-chmod +rwx /tmp/host_info_nfs.sh
-
-# execute the script
+sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
+chmod +x /tmp/host_info_nfs.sh
 /tmp/host_info_nfs.sh
-
 EOF
+
 
 # scp the results to the local machine
 sshpass -p "adminpass" scp root@s01:/tmp/s01_report_nfs.html /tmp
