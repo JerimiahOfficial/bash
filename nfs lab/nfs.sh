@@ -3,10 +3,9 @@
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/nfs%20lab/host_info_nfs.sh
 
-echo "userpass" | sudo -S -k yum install sshpass*.rpm -y -q
-echo "userpass" | sudo -S -k yum install nfs-utils -y -q
+echo "adminpass" | su -c "yum install sshpass*.rpm -y -q"
+echo "adminpass" | su -c "yum install nfs-utils -y -q"
 
-sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
     yum install nfs-utils -y -q
     yum install net-tools -y -q
@@ -31,8 +30,12 @@ sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
     echo "/nfs_shares/research w01(rw,no_root_squash,all_squash,anongid=2002)" >>/etc/exports
     echo "/nfs_shares/pub w01(rw)" >>/etc/exports
 
+    chmod 777 /nfs_shares/scratch
+
     chgrp research /nfs_shares/research
     chmod 1770 /nfs_shares/research
+    
+    chmod 777 /nfs_shares/pub
 
     usermod -l w01_guest nobody
     groupmod -n w01_guest nobody
@@ -87,10 +90,19 @@ echo "adminpass" | su -c "echo \"test\" > /nfs_shares/pub/root" root
 echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/margaret" margaret
 echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/katherine" katherine
 
+# Upload the script to the s01
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
+
 # excute the script on s01
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
-    chmod +x /tmp/host_info_nfs.sh
-    /tmp/host_info_nfs.sh
+    # cd /tmp
+    cd /tmp
+
+    # chmod +x the script
+    chmod +x host_info_nfs.sh
+
+    # execute the script
+    ./host_info_nfs.sh
 EOF
 
 # scp the results to the local machine
