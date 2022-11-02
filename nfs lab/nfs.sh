@@ -5,6 +5,7 @@ curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/nfs%20lab/h
 
 # ssh into root on w01
 sshpass -p "adminpass" ssh root@w01 /bin/sh <<-EOF
+	# Intall sshpass and nfs-utils on w01
 	yum install sshpass*.rpm -y
 	yum install nfs-utils -y
 EOF
