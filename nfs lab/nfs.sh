@@ -39,10 +39,6 @@ usermod -l w01_guest nobody
 groupmod -n w01_guest nobody
 
 exportfs -r
-
-cd /tmp
-chmod +rwx /tmp/host_info_nfs.sh
-/tmp/host_info_nfs.sh
 EOF
 
 echo "adminpass" | su root -c "useradd -u 2000 margaret"
@@ -84,6 +80,14 @@ echo "adminpass" | su root -c "mount -t nfs s01:/nfs_shares/pub /nfs_shares/pub"
 echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/pub/test.txt"
 echo "123" | su margaret -c "echo \"test\" > /nfs_shares/pub/test.txt"
 echo "123" | su katherine -c "echo \"test\" > /nfs_shares/pub/test.txt"
+
+sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
+
+cd /tmp
+chmod +rwx /tmp/host_info_nfs.sh
+/tmp/host_info_nfs.sh
+
+EOF
 
 sshpass -p "adminpass" scp root@s01:/tmp/s01_report_nfs.html /tmp
 
