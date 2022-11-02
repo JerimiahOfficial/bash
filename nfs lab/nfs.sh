@@ -94,7 +94,7 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	echo "Test" > /nfs_shares/pub/root
 EOF
 
-# ssh to margaret on w01 and run a few commands
+# ssh to margaret on w01 and create test files
 sshpass -p "123" ssh margaret@w01 -o StrictHostKeyChecking=no  /bin/sh <<-EOF
 	# Create test files in the shared directories
 	echo "Test" > /nfs_shares/scratch/margaret
@@ -102,7 +102,7 @@ sshpass -p "123" ssh margaret@w01 -o StrictHostKeyChecking=no  /bin/sh <<-EOF
 	echo "Test" > /nfs_shares/pub/margaret
 EOF
 
-# ssh to katherine on w01 and run a few commands
+# ssh to katherine on w01 and create test files
 sshpass -p "123" ssh katherine@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	# Create test files in the shared directories
 	echo "Test" > /nfs_shares/scratch/katherine
