@@ -7,40 +7,40 @@ echo "adminpass" | su -c "yum install sshpass*.rpm -y -q"
 echo "adminpass" | su -c "yum install nfs-utils -y -q"
 
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
-    yum install nfs-utils -y -q
-    yum install net-tools -y -q
+	yum install nfs-utils -y -q
+	yum install net-tools -y -q
 
-    firewall-cmd --permanent --add-service=nfs3
-    firewall-cmd --reload
+	firewall-cmd --permanent --add-service=nfs3
+	firewall-cmd --reload
 
-    systemctl enable --now nfs-server
+	systemctl enable --now nfs-server
 
-    useradd -u 2000 margaret
-    useradd -u 2001 katherine
+	useradd -u 2000 margaret
+	useradd -u 2001 katherine
 
-    groupadd research
-    usermod -a -G research margaret
-    usermod -a -G research katherine
+	groupadd research
+	usermod -a -G research margaret
+	usermod -a -G research katherine
 
-    mkdir -p /nfs_shares/scratch
-    mkdir -p /nfs_shares/research
-    mkdir -p /nfs_shares/pub
+	mkdir -p /nfs_shares/scratch
+	mkdir -p /nfs_shares/research
+	mkdir -p /nfs_shares/pub
 
-    echo "/nfs_shares/scratch w01(rw)" >>/etc/exports
-    echo "/nfs_shares/research w01(rw,no_root_squash,all_squash,anongid=2002)" >>/etc/exports
-    echo "/nfs_shares/pub w01(rw)" >>/etc/exports
+	echo "/nfs_shares/scratch w01(rw)" >>/etc/exports
+	echo "/nfs_shares/research w01(rw,no_root_squash,all_squash,anongid=2002)" >>/etc/exports
+	echo "/nfs_shares/pub w01(rw)" >>/etc/exports
 
-    chmod 777 /nfs_shares/scratch
+	chmod 777 /nfs_shares/scratch
 
-    chgrp research /nfs_shares/research
-    chmod 1770 /nfs_shares/research
+	chgrp research /nfs_shares/research
+	chmod 1770 /nfs_shares/research
 
-    chmod 777 /nfs_shares/pub
+	chmod 777 /nfs_shares/pub
 
-    usermod -l w01_guest nobody
-    groupmod -n w01_guest nobody
+	usermod -l w01_guest nobody
+	groupmod -n w01_guest nobody
 
-    exportfs -r
+	exportfs -r
 EOF
 
 # Create the users margaret and katherine on w01
@@ -95,14 +95,14 @@ sshpass -p "adminpass" scp ~/Downloads/host_info_nfs.sh root@s01:/tmp
 
 # excute the script on s01
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
-    # cd /tmp
-    cd /tmp
+	# cd /tmp
+	cd /tmp
 
-    # chmod +x the script
-    chmod +x host_info_nfs.sh
+	# chmod +x the script
+	chmod +x host_info_nfs.sh
 
-    # execute the script
-    ./host_info_nfs.sh
+	# execute the script
+	./host_info_nfs.sh
 EOF
 
 # scp the results to the local machine
