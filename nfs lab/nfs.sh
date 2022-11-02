@@ -32,7 +32,7 @@ echo "/nfs_shares/research w01(rw,no_root_squash,all_squash,anongid=2002)" >>/et
 echo "/nfs_shares/pub w01(rw)" >>/etc/exports
 
 chgrp research /nfs_shares/research
-chmod 2770 /nfs_shares/research
+chmod 1770 /nfs_shares/research
 
 usermod -l w01_guest nobody
 groupmod -n w01_guest nobody
