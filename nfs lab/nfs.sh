@@ -7,7 +7,7 @@ echo "userpass" | sudo -S -k yum install sshpass*.rpm -y -q
 echo "userpass" | sudo -S -k yum install nfs-utils -y -q
 
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
-sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
+sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
     yum install nfs-utils -y -q
     yum install net-tools -y -q
 
@@ -88,11 +88,10 @@ echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/margaret" margaret
 echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/katherine" katherine
 
 # excute the script on s01
-sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
-chmod +x /tmp/host_info_nfs.sh
-/tmp/host_info_nfs.sh
+sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
+    chmod +x /tmp/host_info_nfs.sh
+    /tmp/host_info_nfs.sh
 EOF
-
 
 # scp the results to the local machine
 sshpass -p "adminpass" scp root@s01:/tmp/s01_report_nfs.html /tmp
