@@ -69,12 +69,18 @@ echo "adminpass" | su root -c "mount -t nfs s01:/nfs_shares/scratch /nfs_shares/
 echo "adminpass" | su root -c "mount -t nfs s01:/nfs_shares/research /nfs_shares/research"
 echo "adminpass" | su root -c "mount -t nfs s01:/nfs_shares/pub /nfs_shares/pub"
 
+# Chmod the directories
+echo "adminpass" | su root -c "chmod 777 /nfs_shares/scratch"
+echo "adminpass" | su root -c "chmod 777 /nfs_shares/research"
+echo "adminpass" | su root -c "chmod 777 /nfs_shares/pub"
+
 # try to create a file in /nfs_shares/scratch
-echo "adminpass" | su root -c "touch /nfs_shares/scratch/test.txt"
+echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/scratch/test.txt"
 echo "123" | su -c "echo \"test\" >> /nfs_shares/scratch/test.txt" margaret
 echo "123" | su -c "echo \"test\" >> /nfs_shares/scratch/test.txt" katherine
 
 # try to create a file in /nfs_shares/research
+echo "root is expected to fail"
 echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/research/test.txt"
 echo "123" | su -c "echo \"test\" >> /nfs_shares/research/test.txt" margaret
 echo "123" | su -c "echo \"test\" >> /nfs_shares/research/test.txt" katherine
@@ -87,14 +93,22 @@ echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/test.txt" katherine
 # excute the script on s01
 sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
 
+# cd to the directory where the script is located
 cd /tmp
+
+# change the permissions of the script
 chmod +rwx /tmp/host_info_nfs.sh
+
+# execute the script
 /tmp/host_info_nfs.sh
 
 EOF
 
+# scp the results to the local machine
 sshpass -p "adminpass" scp root@s01:/tmp/s01_report_nfs.html /tmp
 
+# open the results
 firefox /tmp/s01_report_nfs.html
 
+# exit the script
 exit 0
