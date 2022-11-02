@@ -3,9 +3,16 @@
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/nfs%20lab/host_info_nfs.sh
 
-echo "adminpass" | su -c "yum install sshpass*.rpm -y"
-echo "adminpass" | su -c "yum install nfs-utils -y"
+# ssh into root on w01
+sshpass -p "adminpass" ssh root@w01 /bin/sh <<-EOF
+	yum install sshpass*.rpm -y
+	yum install nfs-utils -y
+EOF
 
+# scp host_info_nfs.sh to s01
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
+
+# ssh into root on s01
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
 	yum install nfs-utils -y
 
@@ -42,12 +49,13 @@ sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
 	exportfs -r
 EOF
 
-# Su to root on w01 and run a few commands
+# ssh to root on w01 and run a few commands
 sshpass -p "adminpass" ssh root@w01 /bin/sh <<-EOF
 	# Create the users margaret and katherine on w01
 	useradd -u 2000 margaret
 	useradd -u 2001 katherine
 
+	# Change the passwd for both new users to 123
 	echo "123" | passwd --stdin margaret
 	echo "123" | passwd --stdin katherine
 
@@ -78,7 +86,7 @@ sshpass -p "adminpass" ssh root@w01 /bin/sh <<-EOF
 	echo "Test" > /nfs_shares/pub/root_test.txt
 EOF
 
-# Su to margaret on w01 and run a few commands
+# ssh to margaret on w01 and run a few commands
 sshpass -p "123" ssh margaret@w01 /bin/sh <<-EOF
 	# Create test files in the shared directories
 	echo "Test" > /nfs_shares/scratch/margaret_test.txt
@@ -86,7 +94,7 @@ sshpass -p "123" ssh margaret@w01 /bin/sh <<-EOF
 	echo "Test" > /nfs_shares/pub/margaret_test.txt
 EOF
 
-# Su to katherine on w01 and run a few commands
+# ssh to katherine on w01 and run a few commands
 sshpass -p "123" ssh katherine@w01 /bin/sh <<-EOF
 	# Create test files in the shared directories
 	echo "Test" > /nfs_shares/scratch/katherine_test.txt
@@ -98,9 +106,6 @@ EOF
 # echo "adminpass" | su -c "chmod 777 /nfs_shares/scratch" root
 # echo "adminpass" | su -c "chmod 777 /nfs_shares/research" root
 # echo "adminpass" | su -c "chmod 777 /nfs_shares/pub" root
-
-# Upload the script to the s01
-sshpass -p "adminpass" scp ~/Downloads/host_info_nfs.sh root@s01:/tmp
 
 # excute the script on s01
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
