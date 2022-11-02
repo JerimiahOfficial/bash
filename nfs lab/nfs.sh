@@ -7,8 +7,7 @@ echo "userpass" | sudo -S -k yum install sshpass*.rpm -y -q
 echo "userpass" | sudo -S -k yum install nfs-utils -y -q
 
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
-sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
-
+sshpass -p "adminpass" ssh root@s01 /bin/sh <EOF
 yum install nfs-utils -y -q
 yum install net-tools -y -q
 
@@ -25,17 +24,15 @@ usermod -a -G research margaret
 usermod -a -G research katherine
 
 mkdir -p /nfs_shares/scratch
-echo "/nfs_shares/scratch w01(rw,sync)" >> /etc/exports
-
 mkdir -p /nfs_shares/research
+mkdir -p /nfs_shares/pub
+
+echo "/nfs_shares/scratch w01(rw)" >>/etc/exports
+echo "/nfs_shares/research w01(rw,no_root_squash,all_squash,anongid=2002)" >>/etc/exports
+echo "/nfs_shares/pub w01(rw)" >>/etc/exports
 
 chgrp research /nfs_shares/research
 chmod 2770 /nfs_shares/research
-
-echo "/nfs_shares/research w01(rw,sync,no_root_squash,all_squash,anongid=2002)" >> /etc/exports
-
-mkdir -p /nfs_shares/pub
-echo "/nfs_shares/pub w01(rw,sync)" >> /etc/exports
 
 usermod -l w01_guest nobody
 groupmod -n w01_guest nobody
@@ -81,7 +78,7 @@ echo "123" | su -c "echo \"test\" >> /nfs_shares/scratch/katherine" katherine
 
 # try to create a file in /nfs_shares/research
 echo "root is expected to fail"
-echo "adminpass" | su -c "echo \"test\" > /nfs_shares/research/test.txt" root
+echo "adminpass" | su -c "echo \"test\" > /nfs_shares/research/root" root
 echo "123" | su -c "echo \"test\" >> /nfs_shares/research/margaret" margaret
 echo "123" | su -c "echo \"test\" >> /nfs_shares/research/katherine" katherine
 
@@ -91,7 +88,7 @@ echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/margaret" margaret
 echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/katherine" katherine
 
 # excute the script on s01
-sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
+sshpass -p "adminpass" ssh root@s01 /bin/sh <EOF
 
 # cd to the directory where the script is located
 cd /tmp
