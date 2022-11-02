@@ -3,12 +3,11 @@
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/nfs%20lab/host_info_nfs.sh
 
-echo "adminpass" | su -c "yum install sshpass*.rpm -y -q"
-echo "adminpass" | su -c "yum install nfs-utils -y -q"
+echo "adminpass" | su -c "yum install sshpass*.rpm -y"
+echo "adminpass" | su -c "yum install nfs-utils -y"
 
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
-	yum install nfs-utils -y -q
-	yum install net-tools -y -q
+	yum install nfs-utils -y
 
 	firewall-cmd --permanent --add-service=nfs3
 	firewall-cmd --reload
@@ -95,6 +94,9 @@ sshpass -p "adminpass" scp ~/Downloads/host_info_nfs.sh root@s01:/tmp
 
 # excute the script on s01
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
+	# install net-tools
+	yum install net-tools -y
+
 	# cd /tmp
 	cd /tmp
 
