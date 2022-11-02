@@ -57,27 +57,27 @@ echo "adminpass" | su root -c "echo \"s01:/nfs_shares/scratch /nfs_shares/scratc
 echo "adminpass" | su root -c "mount -t nfs s01:/nfs_shares/scratch /nfs_shares/scratch"
 
 # try to create a file in /nfs_shares/scratch
-echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/scratch/test.txt"
+echo "adminpass" | su root -c "touch /nfs_shares/scratch/test.txt" || echo "Failed to create file in /nfs_shares/scratch"
 echo "123" | su margaret -c "echo \"test\" > /nfs_shares/scratch/test.txt"
 echo "123" | su katherine -c "echo \"test\" > /nfs_shares/scratch/test.txt"
 
 # Adding the share /nfs_shares/research to /etc/fstab
-echo "adminpass" | su root -c "mkdir -p /nfs_shares/research"
+echo "adminpass" | su root -c "mkdir -p /nfs_shares/research" || echo "Failed to create /nfs_shares/research"
 echo "adminpass" | su root -c "echo \"s01:/nfs_shares/research /nfs_shares/research nfs defaults 0 0\" >> /etc/fstab"
 echo "adminpass" | su root -c "mount -t nfs s01:/nfs_shares/research /nfs_shares/research"
 
 # try to create a file in /nfs_shares/research
-echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/research/test.txt"
+echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/research/test.txt" || echo "Failed to create file in /nfs_shares/research"
 echo "123" | su margaret -c "echo \"test\" > /nfs_shares/research/test.txt"
 echo "123" | su katherine -c "echo \"test\" > /nfs_shares/research/test.txt"
 
 # Adding the share /nfs_shares/pub to /etc/fstab
-echo "adminpass" | su root -c "mkdir -p /nfs_shares/pub"
+echo "adminpass" | su root -c "mkdir -p /nfs_shares/pub" || echo "Failed to create /nfs_shares/pub"
 echo "adminpass" | su root -c "echo \"s01:/nfs_shares/pub /nfs_shares/pub nfs defaults 0 0\" >> /etc/fstab"
 echo "adminpass" | su root -c "mount -t nfs s01:/nfs_shares/pub /nfs_shares/pub"
 
 # try to create a file in /nfs_shares/pub
-echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/pub/test.txt"
+echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/pub/test.txt" || echo "Failed to create file in /nfs_shares/pub"
 echo "123" | su margaret -c "echo \"test\" > /nfs_shares/pub/test.txt"
 echo "123" | su katherine -c "echo \"test\" > /nfs_shares/pub/test.txt"
 
