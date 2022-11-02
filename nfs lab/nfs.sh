@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
-curl -O https://github.com/JerimiahOfficial/bash/raw/main/sshpass-1.05-1.el7.rf.x86_64.rpm
+curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
+curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/nfs%20lab/host_info_nfs.sh
 
 echo "userpass" | sudo -S -k yum install sshpass*.rpm -y -q
 
@@ -8,6 +9,7 @@ sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs
 sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
 
 yum install -y nfs-utils
+yum install -y net-tools
 
 firewall-cmd --permanent --add-service=nfs3
 firewall-cmd --reload
@@ -43,8 +45,8 @@ echo "userpass" | sudo -S -k yum install nfs-utils -y -q
 echo "userpass" | sudo -S -k useradd -u 2000 margaret
 echo "userpass" | sudo -S -k useradd -u 2001 katherine
 
-echo "123" | passwd --stdin margaret
-echo "123" | passwd --stdin katherine
+echo "userpass" | sudo -S -k echo "123" | passwd --stdin margaret
+echo "userpass" | sudo -S -k echo "123" | passwd --stdin katherine
 
 echo "userpass" | sudo -S -k groupadd research
 echo "userpass" | sudo -S -k usermod -a -G research margaret
