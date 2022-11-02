@@ -42,52 +42,62 @@ sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
 	exportfs -r
 EOF
 
-# Create the users margaret and katherine on w01
-echo "adminpass" | su -c "useradd -u 2000 margaret" root
-echo "adminpass" | su -c "useradd -u 2001 katherine" root
-echo "adminpass" | su -c "echo "123" | passwd --stdin margaret" root
-echo "adminpass" | su -c "echo "123" | passwd --stdin katherine" root
+# Su to root on w01 and run a few commands
+sshpass -p "adminpass" ssh root@w01 /bin/sh <<-EOF
+	# Create the users margaret and katherine on w01
+	useradd -u 2000 margaret
+	useradd -u 2001 katherine
 
-# Create research group and add margaret and katherine to it on w01
-echo "adminpass" | su -c "groupadd research" root
-echo "adminpass" | su -c "usermod -a -G research margaret" root
-echo "adminpass" | su -c "usermod -a -G research katherine" root
+	echo "123" | passwd --stdin margaret
+	echo "123" | passwd --stdin katherine
 
-# Create the shared directories
-echo "adminpass" | su -c "mkdir -p /nfs_shares/scratch" root
-echo "adminpass" | su -c "mkdir -p /nfs_shares/research" root
-echo "adminpass" | su -c "mkdir -p /nfs_shares/pub" root
+	# Create research group and add margaret and katherine to it on w01
+	groupadd research
+	usermod -a -G research margaret
+	usermod -a -G research katherine
 
-# Create fstab entries
-echo "adminpass" | su -c "echo \"s01:/nfs_shares/scratch /nfs_shares/scratch nfs defaults 0 0\" >> /etc/fstab" root
-echo "adminpass" | su -c "echo \"s01:/nfs_shares/research /nfs_shares/research nfs defaults 0 0\" >> /etc/fstab" root
-echo "adminpass" | su -c "echo \"s01:/nfs_shares/pub /nfs_shares/pub nfs defaults 0 0\" >> /etc/fstab" root
+	# Create the shared directories on w01
+	mkdir -p /nfs_shares/scratch
+	mkdir -p /nfs_shares/research
+	mkdir -p /nfs_shares/pub
 
-# Mount the shared directories
-echo "adminpass" | su -c "mount -t nfs s01:/nfs_shares/scratch /nfs_shares/scratch" root
-echo "adminpass" | su -c "mount -t nfs s01:/nfs_shares/research /nfs_shares/research" root
-echo "adminpass" | su -c "mount -t nfs s01:/nfs_shares/pub /nfs_shares/pub" root
+	# Create fstab entries
+	echo "s01:/nfs_shares/scratch /nfs_shares/scratch nfs defaults 0 0" >> /etc/fstab
+	echo "s01:/nfs_shares/research /nfs_shares/research nfs defaults 0 0" >> /etc/fstab
+	echo "s01:/nfs_shares/pub /nfs_shares/pub nfs defaults 0 0" >> /etc/fstab
 
-# Chmod the directories
-echo "adminpass" | su -c "chmod 777 /nfs_shares/scratch" root
-echo "adminpass" | su -c "chmod 777 /nfs_shares/research" root
-echo "adminpass" | su -c "chmod 777 /nfs_shares/pub" root
+	# Mount the shared directories
+	mount -t nfs s01:/nfs_shares/scratch /nfs_shares/scratch
+	mount -t nfs s01:/nfs_shares/research /nfs_shares/research
+	mount -t nfs s01:/nfs_shares/pub /nfs_shares/pub
 
-# try to create a file in /nfs_shares/scratch
-echo "adminpass" | su -c "echo \"test\" > /nfs_shares/scratch/root" root
-echo "123" | su -c "echo \"test\" >> /nfs_shares/scratch/margaret" margaret
-echo "123" | su -c "echo \"test\" >> /nfs_shares/scratch/katherine" katherine
+	# Create test files in the shared directories
+	echo "Test" > /nfs_shares/scratch/root_test.txt
+	# Test file should not be able to be created in the research directory
+	echo "Test" > /nfs_shares/research/root_test.txt
+	echo "Test" > /nfs_shares/pub/root_test.txt
+EOF
 
-# try to create a file in /nfs_shares/research
-echo "root is expected to fail"
-echo "adminpass" | su -c "echo \"test\" > /nfs_shares/research/root" root
-echo "123" | su -c "echo \"test\" >> /nfs_shares/research/margaret" margaret
-echo "123" | su -c "echo \"test\" >> /nfs_shares/research/katherine" katherine
+# Su to margaret on w01 and run a few commands
+sshpass -p "123" ssh margaret@w01 /bin/sh <<-EOF
+	# Create test files in the shared directories
+	echo "Test" > /nfs_shares/scratch/margaret_test.txt
+	echo "Test" > /nfs_shares/research/margaret_test.txt
+	echo "Test" > /nfs_shares/pub/margaret_test.txt
+EOF
 
-# try to create a file in /nfs_shares/pub
-echo "adminpass" | su -c "echo \"test\" > /nfs_shares/pub/root" root
-echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/margaret" margaret
-echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/katherine" katherine
+# Su to katherine on w01 and run a few commands
+sshpass -p "123" ssh katherine@w01 /bin/sh <<-EOF
+	# Create test files in the shared directories
+	echo "Test" > /nfs_shares/scratch/katherine_test.txt
+	echo "Test" > /nfs_shares/research/katherine_test.txt
+	echo "Test" > /nfs_shares/pub/katherine_test.txt
+EOF
+
+# # Chmod the directories
+# echo "adminpass" | su -c "chmod 777 /nfs_shares/scratch" root
+# echo "adminpass" | su -c "chmod 777 /nfs_shares/research" root
+# echo "adminpass" | su -c "chmod 777 /nfs_shares/pub" root
 
 # Upload the script to the s01
 sshpass -p "adminpass" scp ~/Downloads/host_info_nfs.sh root@s01:/tmp
