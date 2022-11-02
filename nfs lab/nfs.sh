@@ -38,6 +38,10 @@ usermod -l w01_guest nobody
 groupmod -n w01_guest nobody
 
 exportfs -r
+
+cd /tmp
+chmod +rwx /tmp/host_info_nfs.sh
+/tmp/host_info_nfs.sh
 EOF
 
 echo "userpass" | sudo -S -k yum install nfs-utils -y -q
@@ -52,7 +56,8 @@ echo "userpass" | sudo -S -k groupadd research
 echo "userpass" | sudo -S -k usermod -a -G research margaret
 echo "userpass" | sudo -S -k usermod -a -G research katherine
 
-# Adding the share to /etc/fstab and mounting it
+# Adding the share /nfs_shares/scratch to /etc/fstab
+echo "userpass" | sudo mkdir -p /nfs_shares/scratch
 echo "userpass" | sudo echo "s01:/nfs_shares/scratch /nfs_shares/scratch nfs defaults 0 0" >> /etc/fstab
 echo "userpass" | sudo mount -t nfs s01:/nfs_shares/scratch /nfs_shares/scratch
 
@@ -61,7 +66,8 @@ echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/scratch/test.txt"
 echo "123" | su margaret -c "echo \"test\" > /nfs_shares/scratch/test.txt"
 echo "123" | su katherine -c "echo \"test\" > /nfs_shares/scratch/test.txt"
 
-# Adding the share to /etc/fstab and mounting it
+# Adding the share /nfs_shares/research to /etc/fstab
+echo "userpass" | sudo mkdir -p /nfs_shares/research
 echo "userpass" | sudo echo "s01:/nfs_shares/research /nfs_shares/research nfs defaults 0 0" >> /etc/fstab
 echo "userpass" | sudo mount -t nfs s01:/nfs_shares/research /nfs_shares/research
 
@@ -70,7 +76,8 @@ echo "adminpass" | su root -c "echo \"test\" > /nfs_shares/research/test.txt"
 echo "123" | su margaret -c "echo \"test\" > /nfs_shares/research/test.txt"
 echo "123" | su katherine -c "echo \"test\" > /nfs_shares/research/test.txt"
 
-# Adding the share to /etc/fstab and mounting it
+# Adding the share /nfs_shares/pub to /etc/fstab
+echo "userpass" | sudo mkdir -p /nfs_shares/pub
 echo "userpass" | sudo echo "s01:/nfs_shares/pub /nfs_shares/pub nfs defaults 0 0" >> /etc/fstab
 echo "userpass" | sudo mount -t nfs s01:/nfs_shares/pub /nfs_shares/pub
 
