@@ -4,15 +4,15 @@ curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/nfs%20lab/host_info_nfs.sh
 
 # Intall sshpass and nfs-utils on w01
-echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y
-echo "userpass" | sudo -S -k yum install nfs-utils -y
+echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
+echo "userpass" | sudo -S -k yum install nfs-utils -y -q
 
 # scp host_info_nfs.sh to s01
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
 
 # ssh into root on s01
-sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
-	yum install nfs-utils -y
+sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+	yum install nfs-utils -y -q
 
 	firewall-cmd --permanent --add-service=nfs3
 	firewall-cmd --reload
@@ -48,7 +48,7 @@ sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
 EOF
 
 # ssh to root on w01 and run a few commands
-sshpass -p "adminpass" ssh root@w01 /bin/sh <<-EOF
+sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	# Create the users margaret and katherine on w01
 	useradd -u 2000 margaret
 	useradd -u 2001 katherine
@@ -85,7 +85,7 @@ sshpass -p "adminpass" ssh root@w01 /bin/sh <<-EOF
 EOF
 
 # ssh to margaret on w01 and run a few commands
-sshpass -p "123" ssh margaret@w01 /bin/sh <<-EOF
+sshpass -p "123" ssh margaret@w01 -o StrictHostKeyChecking=no  /bin/sh <<-EOF
 	# Create test files in the shared directories
 	echo "Test" > /nfs_shares/scratch/margaret_test.txt
 	echo "Test" > /nfs_shares/research/margaret_test.txt
@@ -93,7 +93,7 @@ sshpass -p "123" ssh margaret@w01 /bin/sh <<-EOF
 EOF
 
 # ssh to katherine on w01 and run a few commands
-sshpass -p "123" ssh katherine@w01 /bin/sh <<-EOF
+sshpass -p "123" ssh katherine@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	# Create test files in the shared directories
 	echo "Test" > /nfs_shares/scratch/katherine_test.txt
 	echo "Test" > /nfs_shares/research/katherine_test.txt
@@ -106,9 +106,9 @@ EOF
 # echo "adminpass" | su -c "chmod 777 /nfs_shares/pub" root
 
 # excute the script on s01
-sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
+sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	# install net-tools
-	yum install net-tools -y
+	yum install net-tools -y -q
 
 	# cd /tmp
 	cd /tmp
