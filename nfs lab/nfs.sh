@@ -2,8 +2,9 @@
 
 curl -O https://github.com/JerimiahOfficial/bash/raw/main/sshpass-1.05-1.el7.rf.x86_64.rpm
 
-echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y
+echo "userpass" | sudo -S -k yum install sshpass*.rpm -y -q
 
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
 sshpass -p "adminpass" ssh root@s01 /bin/sh << EOF
 
 yum install -y nfs-utils
@@ -37,17 +38,17 @@ groupmod -n w01_guest nobody
 exportfs -r
 EOF
 
-yum install -y nfs-utils
+echo "userpass" | sudo -S -k yum install nfs-utils -y -q
 
-useradd -u 2000 margaret
-useradd -u 2001 katherine
+echo "userpass" | sudo -S -k useradd -u 2000 margaret
+echo "userpass" | sudo -S -k useradd -u 2001 katherine
 
 echo "123" | passwd --stdin margaret
 echo "123" | passwd --stdin katherine
 
-groupadd research
-usermod -a -G research margaret
-usermod -a -G research katherine
+echo "userpass" | sudo -S -k groupadd research
+echo "userpass" | sudo -S -k usermod -a -G research margaret
+echo "userpass" | sudo -S -k usermod -a -G research katherine
 
 # Adding the share to /etc/fstab and mounting it
 echo "userpass" | sudo echo "s01:/nfs_shares/scratch /nfs_shares/scratch nfs defaults 0 0" >> /etc/fstab
