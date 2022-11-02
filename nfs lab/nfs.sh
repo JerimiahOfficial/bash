@@ -3,12 +3,9 @@
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/nfs%20lab/host_info_nfs.sh
 
-# ssh into root on w01
-sshpass -p "adminpass" ssh root@w01 /bin/sh <<-EOF
-	# Intall sshpass and nfs-utils on w01
-	yum install sshpass*.rpm -y
-	yum install nfs-utils -y
-EOF
+# Intall sshpass and nfs-utils on w01
+echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y
+echo "userpass" | sudo -S -k yum install nfs-utils -y
 
 # scp host_info_nfs.sh to s01
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
