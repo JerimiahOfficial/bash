@@ -34,7 +34,7 @@ sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
 
     chgrp research /nfs_shares/research
     chmod 1770 /nfs_shares/research
-    
+
     chmod 777 /nfs_shares/pub
 
     usermod -l w01_guest nobody
@@ -91,7 +91,7 @@ echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/margaret" margaret
 echo "123" | su -c "echo \"test\" >> /nfs_shares/pub/katherine" katherine
 
 # Upload the script to the s01
-sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/host_info_nfs.sh root@s01:/tmp
+sshpass -p "adminpass" scp ~/Downloads/host_info_nfs.sh root@s01:/tmp
 
 # excute the script on s01
 sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
