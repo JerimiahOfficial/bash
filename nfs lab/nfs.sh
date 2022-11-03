@@ -42,7 +42,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	echo "/nfs_shares/pub w01(rw,no_root_squash,all_squash)" >>/etc/exports
 
 	# Anyone can read/write to the scratch directory
-	chmod -R 666 /nfs_shares/scratch
+	chmod -R 777 /nfs_shares/pub
 
 	# Only members of the research group can access the research directory
 	chown -R root:research /nfs_shares/research
