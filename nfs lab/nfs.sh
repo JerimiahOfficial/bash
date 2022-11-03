@@ -27,7 +27,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	useradd -u 2001 katherine
 
 	# Create research group and add users
-	groupadd research
+	groupadd research -g 2002
 	usermod -a -G research margaret
 	usermod -a -G research katherine
 
@@ -46,6 +46,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
 	# Only members of the research group can access the research directory
 	chown -R root:research /nfs_shares/research
+	chmod -R 770 /nfs_shares/research
 
 	# Everyone has full access to the pub directory
 	chmod -R 777 /nfs_shares/pub
@@ -69,7 +70,7 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	echo "123" | passwd --stdin katherine
 
 	# Create research group and add margaret and katherine to it on w01
-	groupadd research
+	groupadd research -g 2002
 	usermod -a -G research margaret
 	usermod -a -G research katherine
 
