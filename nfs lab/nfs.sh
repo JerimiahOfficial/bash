@@ -37,19 +37,21 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	mkdir -p /nfs_shares/pub
 
 	# Adding share files to /etc/exports
-	echo "/nfs_shares/scratch w01(rw,no_root_squash)" >>/etc/exports
+	echo "/nfs_shares/scratch w01(rw,sync,no_root_squash)" >>/etc/exports
 	echo "/nfs_shares/research w01(rw,anongid=2002)" >>/etc/exports
 	echo "/nfs_shares/pub w01(rw,no_root_squash,all_squash)" >>/etc/exports
 
 	# Anyone can read/write to the scratch directory
-	chmod -R 777 /nfs_shares/pub
+	chmod 777 /nfs_shares/scratch
+	chown root:root /nfs_shares/scratch
 
 	# Only members of the research group can access the research directory
-	chown -R root:research /nfs_shares/research
 	chmod -R 2770 /nfs_shares/research
+	chown -R root:research /nfs_shares/research
 
 	# Everyone has full access to the pub directory
-	chmod -R 777 /nfs_shares/pub
+	chmod 777 /nfs_shares/pub
+	chown root:root /nfs_shares/pub
 
 	# Changing nobody user to w01_guest
 	usermod -l w01_guest nobody
@@ -88,12 +90,6 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	mount -t nfs s01:/nfs_shares/scratch /nfs_shares/scratch
 	mount -t nfs s01:/nfs_shares/research /nfs_shares/research
 	mount -t nfs s01:/nfs_shares/pub /nfs_shares/pub
-
-	# Set the permissions on the shared directories
-	chown -R root:research /nfs_shares/research
-	chmod -R 777 /nfs_shares/pub
-	chmod -R 2770 /nfs_shares/research
-	chmod -R 777 /nfs_shares/pub
 
 	# Create test files in the shared directories
 	echo "Test" > /nfs_shares/scratch/root
