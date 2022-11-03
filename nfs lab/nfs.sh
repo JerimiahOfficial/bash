@@ -46,7 +46,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
 	# Only members of the research group can access the research directory
 	chown -R root:research /nfs_shares/research
-	chmod -R 2070 /nfs_shares/research
+	chmod -R 2770 /nfs_shares/research
 
 	# Everyone has full access to the pub directory
 	chmod -R 777 /nfs_shares/pub
@@ -88,6 +88,12 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	mount -t nfs s01:/nfs_shares/scratch /nfs_shares/scratch
 	mount -t nfs s01:/nfs_shares/research /nfs_shares/research
 	mount -t nfs s01:/nfs_shares/pub /nfs_shares/pub
+
+	# Set the permissions on the shared directories
+	chown -R root:research /nfs_shares/research
+	chmod -R 777 /nfs_shares/pub
+	chmod -R 2770 /nfs_shares/research
+	chmod -R 777 /nfs_shares/pub
 
 	# Create test files in the shared directories
 	echo "Test" > /nfs_shares/scratch/root
