@@ -4,14 +4,29 @@
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Logging/host_info_log.sh
 
+# notfiy user that sshpass is being installed
+echo "Installing sshpass"
+
 # install sshpass
-echo "userpass" | sudo -S yum install -y sshpass-1.05-1.el7.rf.x86_64.rpm
+echo "userpass" | sudo -S yum install -q -y sshpass-1.05-1.el7.rf.x86_64.rpm
+
+# make sure sshpass is installed before continuing
+while [ ! -f /usr/bin/sshpass ]; do
+    sleep 1
+done
+
+# notfiy that copying script to s01
+echo "Copying script to s01"
 
 # copy over host host_info_log.sh
-sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ./host_info_log.sh root@s01:/root/host_info_log.sh
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ./host_info_log.sh root@s01:/tmp/host_info_log.sh
+
+# notfiy that script is being executed on s01
+echo "Executing script on s01"
 
 # Running commands on s01 as root
 sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
+    # make sure that the script is executable
     chmod +x /root/host_info_log.sh
 
     # Part A:
@@ -43,6 +58,11 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
 
     firewall-cmd --permanent --add-port=514/tcp
     firewall-cmd --reload
+
+    # wait for firewall to reload
+    while [ "$(firewall-cmd --state)" != "running" ]; do
+        sleep 1
+    done
 
     # Part D:
     echo "local2.* /var/log/httpd_err" >>/var/log/httpd_err
