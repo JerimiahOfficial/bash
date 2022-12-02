@@ -47,7 +47,7 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     systemctl restart rsyslog
 
     while [ "$(systemctl is-active rsyslog)" != "active" ]; do
-    sleep 1
+        sleep 1
     done
         
     logger -p mail.err "FM4: mail.err"
@@ -64,7 +64,7 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     firewall-cmd --reload
 
     while [ "$(firewall-cmd --state)" != "running" ]; do
-    sleep 1
+        sleep 1
     done
 
     # Part D:
@@ -92,7 +92,7 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@w01 /bin/bash <<-EOF
     systemctl start httpd
 
     while [ "$(systemctl is-active httpd)" != "active" ]; do
-    sleep 1
+        sleep 1
     done
 
     curl http://localhost
