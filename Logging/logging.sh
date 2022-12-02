@@ -70,6 +70,9 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
     # Part E:
     echo "local2.* ~" >>/etc/rsyslog.conf
     echo "local2.* ~" >>/etc/rsyslog.conf
+
+    # run script
+    /tmp/host_info_log.sh
 EOF
 
 # Running commands on w01 as alice
