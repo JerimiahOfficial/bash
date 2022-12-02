@@ -23,7 +23,7 @@ sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ./host_info_log.sh root@s
 echo "Executing script on s01"
 sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     # make sure that the script is executable
-    chmod +x /root/host_info_log.sh
+    chmod +x /tmp/host_info_log.sh
 
     # Part A:
     logger -p cron.debug "FM1: This is fake msg from cron with pri=debug"
