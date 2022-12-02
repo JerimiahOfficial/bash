@@ -78,32 +78,30 @@ EOF
 
 # Running commands on w01 as root
 echo "Executing script on w01"
-sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@w01 /bin/bash <<-EOF
-    # Part C:
-    echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
+# Part C:
+echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
 
-    # Part D:
-    yum install httpd -y -q
+# Part D:
+yum install httpd -y -q
 
-    while [ ! -f /usr/sbin/httpd ]; do
-        sleep 1
-    done
+while [ ! -f /usr/sbin/httpd ]; do
+    sleep 1
+done
 
-    echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
+echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
-    systemctl start httpd
+systemctl start httpd
 
-    while [ "$(systemctl is-active httpd)" != "active" ]; do
-        sleep 1
-    done
+while [ "$(systemctl is-active httpd)" != "active" ]; do
+    sleep 1
+done
 
-    curl http://localhost
+curl http://localhost
 
-    # Part E:
-    echo "local2.* ~" >>/etc/rsyslog.conf
+# Part E:
+echo "local2.* ~" >>/etc/rsyslog.conf
 
-    curl http://localhost
-EOF
+curl http://localhost
 
 # scp copy over result from s01
 echo "Copying result from s01"
