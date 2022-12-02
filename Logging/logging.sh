@@ -13,7 +13,7 @@ curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Logging/hos
 
 # install sshpass
 echo "Installing sshpass"
-echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
+yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 while [ ! -f /usr/bin/sshpass ]; do
     sleep 1
 done
