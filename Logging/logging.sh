@@ -5,9 +5,6 @@ echo "Downloading sshpass"
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Logging/host_info_log.sh
 
-# chmod sshpass
-chmod +x sshpass-1.05-1.el7.rf.x86_64.rpm
-
 # install sshpass
 echo "Installing sshpass"
 echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
