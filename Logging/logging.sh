@@ -28,15 +28,12 @@ sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ./host_info_log.sh root@s
 # Running commands on s01 as root
 echo "Executing script on s01"
 sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
-    # make sure that the script is executable
     chmod +x /tmp/host_info_log.sh
 
-    # Part A:
     logger -p cron.debug "FM1: This is fake msg from cron with pri=debug"
     logger -p mail.err "FM2: This is fake msg from mail with pri=err"
     logger -p local7.err "FM3: This is fake msg from local7 with pri=err"
 
-    # Part B:
     cp /etc/rsyslog.conf /etc/rsyslog.conf.prev
 
     echo "mail.* /var/log/mail_warn.log" >>/etc/rsyslog.conf
@@ -54,7 +51,6 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     logger -p cron.warning "FM7: cron.warn"
     logger -p cron.err "FM8: cron.err"
 
-    # Part C:
     echo "module(load=\"imtcp\") # needs to be done just once" >>/etc/rsyslog.conf
     echo "input(type=\"imtcp\" port=\"514\")" >>/etc/rsyslog.conf
 
@@ -65,23 +61,17 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
         sleep 1
     done
 
-    # Part D:
     echo "local2.* /var/log/httpd_err" >>/var/log/httpd_err
-
-    # Part E:
     echo "local2.* ~" >>/etc/rsyslog.conf
     echo "local2.* ~" >>/etc/rsyslog.conf
 
-    # run script
     /tmp/host_info_log.sh
 EOF
 
 # Running commands on w01 as root
 echo "Executing script on w01"
-# Part C:
 echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
 
-# Part D:
 yum install httpd -y -q
 
 while [ ! -f /usr/sbin/httpd ]; do
@@ -98,7 +88,6 @@ done
 
 curl http://localhost
 
-# Part E:
 echo "local2.* ~" >>/etc/rsyslog.conf
 
 curl http://localhost
