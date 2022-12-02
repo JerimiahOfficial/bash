@@ -27,8 +27,10 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
 
     systemctl restart rsyslog
 
-    systemctl status rsyslog
-
+    while [ "$(systemctl is-active rsyslog)" != "active" ]; do
+        sleep 1
+    done
+    
     logger -p mail.err "FM4: mail.err"
     logger -p mail.warning "FM5: mail.warn"
     logger -p mail.debug "FM6: mail.debug"
