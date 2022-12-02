@@ -75,24 +75,27 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
     /tmp/host_info_log.sh
 EOF
 
-# Running commands on w01 as alice
-# Part C:
-echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
+# Running commands on w01 as root
+echo "Executing script on w01"
+sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@w01 /bin/bash <<EOF
+    # Part C:
+    echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
 
-# Part D:
-echo "userpass" | yum install -y httpd
+    # Part D:
+    yum install -y httpd -q
 
-echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
+    echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
-systemctl start httpd
+    systemctl start httpd
 
-while [ "$(systemctl is-active httpd)" != "active" ]; do
-    sleep 1
-done
+    while [ "$(systemctl is-active httpd)" != "active" ]; do
+        sleep 1
+    done
 
-curl http://localhost
+    curl http://localhost
 
-# Part E:
-echo "local2.* ~" >>/etc/rsyslog.conf
+    # Part E:
+    echo "local2.* ~" >>/etc/rsyslog.conf
 
-curl http://localhost
+    curl http://localhost
+EOF
