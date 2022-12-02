@@ -85,7 +85,11 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@w01 /bin/bash <<-EOF
     echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
 
     # Part D:
-    yum install -y httpd -q
+    yum install httpd -y -q
+
+    while [ ! -f /usr/sbin/httpd ]; do
+        sleep 1
+    done
 
     echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
