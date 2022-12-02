@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# change to the directory where the script is located
-cd ~/Downloads
-
 # download sshpass
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
+curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Logging/host_info_log.sh
 
 # install sshpass
 echo "userpass" | sudo -S yum install -y sshpass-1.05-1.el7.rf.x86_64.rpm
@@ -14,6 +12,8 @@ sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ./host_info_log.sh root@s
 
 # Running commands on s01 as root
 sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
+    chmod +x /root/host_info_log.sh
+
     # Part A:
     logger -p cron.debug "FM1: This is fake msg from cron with pri=debug"
     logger -p mail.err "FM2: This is fake msg from mail with pri=err"
