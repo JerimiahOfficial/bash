@@ -98,3 +98,7 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@w01 /bin/bash <<-EOF
 
     curl http://localhost
 EOF
+
+# scp copy over result from s01
+echo "Copying result from s01"
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no root@s01:/tmp/s01_report_log.html ./s01_report_log.html
