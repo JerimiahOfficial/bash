@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # download sshpass
 echo "Downloading sshpass"
