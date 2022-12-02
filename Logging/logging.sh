@@ -10,15 +10,10 @@ chmod +x sshpass-1.05-1.el7.rf.x86_64.rpm
 
 # install sshpass
 echo "Installing sshpass"
-sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@w01 /bin/bash <<-EOF
-    # install sshpass from alice's downloads folder
-    yum install /home/alice/Downloads/sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
-
-    # make sure sshpass is installed before continuing
-    while [ ! -f /usr/bin/sshpass ]; do
-        sleep 1
-    done
-EOF
+echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
+while [ ! -f /usr/bin/sshpass ]; do
+    sleep 1
+done
 
 # notify the user that sshpass is installed
 echo "sshpass installed"
