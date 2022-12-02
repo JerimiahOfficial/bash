@@ -83,6 +83,11 @@ echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
 systemctl start httpd
 
+# wait for httpd to start
+while [ "$(systemctl is-active httpd)" != "active" ]; do
+    sleep 1
+done
+
 curl http://localhost
 
 # Part E:
