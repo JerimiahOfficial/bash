@@ -1,30 +1,31 @@
 #!/bin/bash
 
 # download sshpass
+echo "Downloading sshpass"
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Logging/host_info_log.sh
 
-# notfiy user that sshpass is being installed
-echo "Installing sshpass"
-
 # install sshpass
-echo "userpass" | sudo -S yum install -q -y sshpass-1.05-1.el7.rf.x86_64.rpm
+echo "Installing sshpass"
+sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@w01 /bin/bash <<EOF
+    # install sshpass from alice's downloads folder
+    yum install /home/alice/Downloads/sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
+EOF
 
 # make sure sshpass is installed before continuing
 while [ ! -f /usr/bin/sshpass ]; do
     sleep 1
 done
 
-# notfiy that copying script to s01
-echo "Copying script to s01"
+# notify the user that sshpass is installed
+echo "sshpass installed"
 
 # copy over host host_info_log.sh
+echo "Copying host_info_log.sh to s01"
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ./host_info_log.sh root@s01:/tmp/host_info_log.sh
 
-# notfiy that script is being executed on s01
-echo "Executing script on s01"
-
 # Running commands on s01 as root
+echo "Executing script on s01"
 sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
     # make sure that the script is executable
     chmod +x /root/host_info_log.sh
@@ -59,7 +60,6 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
     firewall-cmd --permanent --add-port=514/tcp
     firewall-cmd --reload
 
-    # wait for firewall to reload
     while [ "$(firewall-cmd --state)" != "running" ]; do
         sleep 1
     done
@@ -86,7 +86,6 @@ echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
 systemctl start httpd
 
-# wait for httpd to start
 while [ "$(systemctl is-active httpd)" != "active" ]; do
     sleep 1
 done
@@ -96,4 +95,4 @@ curl http://localhost
 # Part E:
 echo "local2.* ~" >>/etc/rsyslog.conf
 
-curl http://localhost/doesnotexist
+curl http://localhost
