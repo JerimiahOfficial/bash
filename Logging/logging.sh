@@ -1,5 +1,11 @@
 #!/bin/bash -e
 
+# Check if ran as root
+if [ "$(id -u)" != "0" ]; then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
 # download sshpass
 echo "Downloading sshpass"
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
@@ -102,3 +108,6 @@ EOF
 # scp copy over result from s01
 echo "Copying result from s01"
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no root@s01:/tmp/s01_report_log.html ./s01_report_log.html
+
+# Exit
+exit 0
