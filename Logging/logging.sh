@@ -1,10 +1,16 @@
 #!/bin/bash
 
+# change to the directory where the script is located
+cd ~/Downloads
+
 # download sshpass
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
 
 # install sshpass
 echo "userpass" | sudo -S yum install -y sshpass-1.05-1.el7.rf.x86_64.rpm
+
+# copy over host host_info_log.sh
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ./host_info_log.sh root@s01:/root/host_info_log.sh
 
 # Running commands on s01 as root
 sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<EOF
