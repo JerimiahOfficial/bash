@@ -107,5 +107,8 @@ curl http://localhost
 echo "Copying result from s01"
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no root@s01:/tmp/s01_report_log.html ./s01_report_log.html
 
+# open the result
+nohup firefox ./s01_report_log.html &
+
 # Exit
 exit 0
