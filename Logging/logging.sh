@@ -14,7 +14,7 @@ yum install /home/alice/Downloads/sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 
 # make sure sshpass is installed before continuing
 while [ ! -f /usr/bin/sshpass ]; do
-    sleep 1
+sleep 1
 done
 
 EOF
@@ -47,7 +47,7 @@ echo "*.err /var/log/msg_err.log" >>/etc/rsyslog.conf
 systemctl restart rsyslog
 
 while [ "$(systemctl is-active rsyslog)" != "active" ]; do
-    sleep 1
+sleep 1
 done
     
 logger -p mail.err "FM4: mail.err"
@@ -64,7 +64,7 @@ firewall-cmd --permanent --add-port=514/tcp
 firewall-cmd --reload
 
 while [ "$(firewall-cmd --state)" != "running" ]; do
-    sleep 1
+sleep 1
 done
 
 # Part D:
@@ -94,7 +94,7 @@ echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 systemctl start httpd
 
 while [ "$(systemctl is-active httpd)" != "active" ]; do
-    sleep 1
+sleep 1
 done
 
 curl http://localhost
