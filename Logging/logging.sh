@@ -44,15 +44,14 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     while [ "$(systemctl is-active rsyslog)" != "active" ]; do
         sleep 1
     done
-        
+
     logger -p mail.err "FM4: mail.err"
     logger -p mail.warning "FM5: mail.warn"
     logger -p mail.debug "FM6: mail.debug"
     logger -p cron.warning "FM7: cron.warn"
     logger -p cron.err "FM8: cron.err"
 
-    echo "module(load=\"imtcp\") # needs to be done just once" >>/etc/rsyslog.conf
-    echo "input(type=\"imtcp\" port=\"514\")" >>/etc/rsyslog.conf
+    #### might change
 
     firewall-cmd --permanent --add-port=514/tcp
     firewall-cmd --reload
@@ -60,6 +59,9 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     while [ "$(firewall-cmd --state)" != "running" ]; do
         sleep 1
     done
+
+    echo "module(load=\"imtcp\") # needs to be done just once" >>/etc/rsyslog.conf
+    echo "input(type=\"imtcp\" port=\"514\")" >>/etc/rsyslog.conf
 
     echo "local2.* /var/log/httpd_err" >>/var/log/httpd_err
     echo "local2.* ~" >>/etc/rsyslog.conf
