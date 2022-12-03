@@ -65,6 +65,7 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     echo "local2.* ~" >>/etc/rsyslog.conf
     echo "local2.* ~" >>/etc/rsyslog.conf
 
+    cd /tmp
     /tmp/host_info_log.sh
 EOF
 
