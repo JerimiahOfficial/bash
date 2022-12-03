@@ -53,6 +53,20 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
 
     #### might change
 
+    # echo "local2.* /var/log/httpd_err" >>/var/log/httpd_err
+    # echo "local2.* ~" >>/etc/rsyslog.conf
+    # echo "local2.* ~" >>/etc/rsyslog.conf
+
+    # /tmp/host_info_log.sh
+EOF
+
+# Running commands on w01 as root
+echo "Executing script on w01"
+echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
+
+# Running commands on s01 as root
+echo "Executing script on s01"
+sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     firewall-cmd --permanent --add-port=514/tcp
     firewall-cmd --reload
 
@@ -62,17 +76,7 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
 
     echo "module(load=\"imtcp\") # needs to be done just once" >>/etc/rsyslog.conf
     echo "input(type=\"imtcp\" port=\"514\")" >>/etc/rsyslog.conf
-
-    echo "local2.* /var/log/httpd_err" >>/var/log/httpd_err
-    echo "local2.* ~" >>/etc/rsyslog.conf
-    echo "local2.* ~" >>/etc/rsyslog.conf
-
-    /tmp/host_info_log.sh
 EOF
-
-# Running commands on w01 as root
-echo "Executing script on w01"
-echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
 
 yum install httpd -y -q
 
