@@ -65,7 +65,6 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     echo "local2.* ~" >>/etc/rsyslog.conf
     echo "local2.* ~" >>/etc/rsyslog.conf
 
-    cd /tmp
     /tmp/host_info_log.sh
 EOF
 
@@ -95,7 +94,7 @@ curl http://localhost
 
 # scp copy over result from s01
 echo "Copying result from s01"
-sshpass -p "adminpass" scp -o StrictHostKeyChecking=no root@s01:/tmp/s01_report_log.html ./s01_report_log.html
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no root@s01:/root/s01_report_log.html ./s01_report_log.html
 
 # open the result
 nohup firefox ./s01_report_log.html &
