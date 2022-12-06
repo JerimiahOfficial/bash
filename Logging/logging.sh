@@ -57,6 +57,12 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     # echo "local2.* ~" >>/etc/rsyslog.conf
     # echo "local2.* ~" >>/etc/rsyslog.conf
 
+    # systemctl restart rsyslog
+
+    # while [ "$(systemctl is-active rsyslog)" != "active" ]; do
+    #     sleep 1
+    # done
+
     # /tmp/host_info_log.sh
 EOF
 
@@ -82,6 +88,11 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
     echo "module(load=\"imtcp\") # needs to be done just once" >>/etc/rsyslog.conf
     echo "input(type=\"imtcp\" port=\"514\")" >>/etc/rsyslog.conf
 EOF
+
+# generate authpriv messages on w01
+logger -p authpriv.info "FM9: authpriv.info"
+logger -p authpriv.warning "FM10: authpriv.warn"
+logger -p authpriv.err "FM11: authpriv.err"
 
 yum install httpd -y -q
 
@@ -112,3 +123,8 @@ nohup firefox ./s01_report_log.html &
 
 # Exit
 exit 0
+
+# generate authpriv messages on w01
+# logger -p authpriv.info "FM9: authpriv.info"
+# logger -p authpriv.warning "FM10: authpriv.warn"
+# logger -p authpriv.err "FM11: authpriv.err"
