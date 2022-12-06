@@ -85,8 +85,8 @@ sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
         sleep 1
     done
 
-    echo "module(load=\"imtcp\") # needs to be done just once" >>/etc/rsyslog.conf
-    echo "input(type=\"imtcp\" port=\"514\")" >>/etc/rsyslog.conf
+    sed -i 's/#module(load="imtcp")/module(load="imtcp")/g' /etc/rsyslog.conf
+    sed -i 's/#input(type="imtcp" port="514")/input(type="imtcp" port="514")/g' /etc/rsyslog.conf
 EOF
 
 # generate authpriv messages on w01
@@ -114,17 +114,20 @@ echo "local2.* ~" >>/etc/rsyslog.conf
 
 curl http://localhost
 
+# Running the grading script on s01
+echo "Running grading script on s01"
+sshpass -p "adminpass" ssh -o StrictHostKeyChecking=no root@s01 /bin/sh <<-EOF
+    /tmp/host_info_log.sh
+EOF
+
 # scp copy over result from s01
 echo "Copying result from s01"
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no root@s01:/root/s01_report_log.html ./s01_report_log.html
 
 # open the result
-nohup firefox ./s01_report_log.html &
+echo "Opening result"
+firefox ./s01_report_log.html &
+disown
 
 # Exit
 exit 0
-
-# generate authpriv messages on w01
-# logger -p authpriv.info "FM9: authpriv.info"
-# logger -p authpriv.warning "FM10: authpriv.warn"
-# logger -p authpriv.err "FM11: authpriv.err"
