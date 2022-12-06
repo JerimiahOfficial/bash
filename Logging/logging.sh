@@ -63,6 +63,11 @@ EOF
 # Running commands on w01 as root
 echo "Executing script on w01"
 echo "authpriv.* @@s01:514" >>/etc/rsyslog.conf
+systemctl restart rsyslog
+
+while [ "$(systemctl is-active rsyslog)" != "active" ]; do
+    sleep 1
+done
 
 # Running commands on s01 as root
 echo "Executing script on s01"
