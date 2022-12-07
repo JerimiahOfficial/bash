@@ -119,7 +119,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # While tcp 514 is not open wait
     while [[ -z \$(netstat -tulpn | grep 514) ]]; do
-        sleep 30
+        sleep 1
         echo "Waiting for tcp 514 to open"
     done
 
@@ -127,8 +127,11 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     echo "Tcp port 514 is open"
 EOF
 
-# Wait for 30 seconds
-sleep 30
+# Check log data from rsyslog
+while [tail -n 1 /var/log/httpd.err | grep resumed -eq "resumed"]; do
+    sleep 1
+    echo "Waiting for rsyslog to resume"
+done
 
 # Running scripts on w01
 echo "Running scripts on w01"
