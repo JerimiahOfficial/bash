@@ -44,7 +44,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     useradd alice
 
     # Store the uid and gid of the create group and user
-    uid=\$(id -u alice)
+    uid=\$(getent passwd alice | cut -d: -f3)
     gid=\$(getent group w01users | cut -d: -f3)
 
     # Install NFS server
