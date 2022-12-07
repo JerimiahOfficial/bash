@@ -3,6 +3,7 @@
 # download dependencies
 echo "Downloading dependencies"
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
+curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Utilities/fresh_check.sh
 
 # install dependencies
 echo "Installing dependencies"
