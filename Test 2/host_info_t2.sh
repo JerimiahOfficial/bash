@@ -5,7 +5,7 @@ OUT_FILE=$(hostname)_report_t2.html
 # map stdout to OUT_FILE
 #
 rm $OUT_FILE 2>/dev/null
-exec 1<> $OUT_FILE
+exec 1<>$OUT_FILE
 
 ################ functions to spit html ################################
 #
@@ -55,8 +55,7 @@ function spit_section_header {
 #
 # are we root?
 #
-if (( EUID != 0 ))
-then
+if ((EUID != 0)); then
 	echo "You must be root to run this script" >&2
 	exit 1
 fi
@@ -68,7 +67,6 @@ echo "This script will collect interesting data from your system" >&2
 echo "The results will be placed in $OUT_FILE, feel free to have a look." >&2
 echo "The best way to view it is a full browser, but lynx will do in a pinch." >&2
 echo "Be patient, it could take a few minutes to run." >&2
-
 
 #
 # from here it's a mix is spits and commands
@@ -84,9 +82,8 @@ date
 spit_end
 
 spit_start "Is this a fresh VM?<br><em>boot history</em>"
-grep -h 'Command line: BOOT' /var/log/messages* | cut -c 1-12 | grep -v Jun| sort -M
+grep -h 'Command line: BOOT' /var/log/messages* | cut -c 1-12 | grep -v Jun | sort -M
 spit_end
-
 
 spit_section_header "Part B: Backup (2 points)"
 
@@ -101,7 +98,7 @@ spit_end
 spit_section_header "Part C: NFS (5 points)"
 
 spit_start "NFS Startup (1 point)"
-systemctl is-enabled nfs-server 
+systemctl is-enabled nfs-server
 spit_end
 
 spit_start "NFS Connecton from w01 (1 point)"
@@ -123,7 +120,7 @@ grep -e imudp -e imtcp /etc/rsyslog.conf | grep -v '^#'
 spit_end
 
 spit_start "anything in /var/log/httpd.err (1 point)"
-wc -l /var/log/httpd.err 
+wc -l /var/log/httpd.err
 spit_end
 
 spit_start "http errors from w01 in <br>/var/log/httpd.err (2 points)"
@@ -144,4 +141,3 @@ echo "<!-- report_id=$(uuidgen) -->"
 $date
 
 spit_post
-
