@@ -77,4 +77,50 @@ curl http://localhost
 # You made some changes to the contents of the /etc directory tree on s01 since the backup was created in section B. Create a tar archive named /tmp/changes.tar containing only the files that have changed since the tar backup from section B completed.
 tar -cvf /tmp/changes.tar -N /tmp/etc.tar /etc
 
-# Run the grading script
+sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    tar -cvf /tmp/etc.tar /etc
+
+    groupadd w01users
+
+    useradd alice
+
+    usermod -aG w01users alice
+
+    uid=\$(id -u alice)
+
+    gid=\$(id -g w01users)
+
+    yum install nfs-utils -y -q
+
+    while [ ! -f /usr/sbin/exportfs ]; do
+        sleep 1
+    done
+
+    firewall-cmd --permanent --add-service=nfs3
+
+    firewall-cmd --reload
+
+    while [ ! -f /usr/bin/firewall-cmd ]; do
+        sleep 1
+    done
+
+    mkdir -p /nfs/w01
+
+    echo "/nfs/w01 *(rw,sync,no_root_squash,no_all_squash,anonuid=\$uid,anongid=\$gid)" >>/etc/exports
+
+    systemctl enable --now nfs-server
+EOF
+
+sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    mkdir -p /nfs/w01
+
+    echo "s01:/nfs/w01 /nfs/w01 nfs defaults 0 2" >>/etc/fstab
+
+    mount -t nfs s01:/nfs/w01 /nfs/w01
+
+    echo "test" >/nfs/w01/test.txt
+EOF
+
+sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+
+EOF

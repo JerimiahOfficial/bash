@@ -25,7 +25,7 @@ echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/{wget*,host*,fresh*} root@s01:/tmp
 
 # sshpass into s01 and run the following commands
-sshpass -p "adminpass" ssh root@s01 /bin/sh <<-EOF
+sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Run fresh_check.sh in /tmp
     cd /tmp
 
