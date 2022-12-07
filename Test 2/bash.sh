@@ -100,6 +100,9 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Restart the syslog
     systemctl restart rsyslog
 
+    # Wait for the syslog to restart
+    wait $!
+
     # Start the web server
     systemctl start httpd
 
