@@ -17,6 +17,9 @@ done
 echo "Installing dependencies"
 echo "userpass" | sudo -S yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 
+# wait for the install to finish
+wait $!
+
 # Notify that scripts are being copied to s01
 echo "Copying scripts to s01"
 
@@ -48,6 +51,9 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Install NFS server
     yum install nfs-utils -y -q
+
+    # wait for the install to finish
+    wait $!
 
     # Configure the firewall
     firewall-cmd --permanent --add-service=nfs3
@@ -150,6 +156,9 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # install net-tools
 	yum install net-tools -y -q
+
+    # wait for the install to finish
+    wait $!
 
     # Run the grading script
     ./host_info_t2.sh
