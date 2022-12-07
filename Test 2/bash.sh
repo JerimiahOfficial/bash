@@ -153,7 +153,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 	cd /tmp
 
     # Create an Incremental Backup named changes.tar with all files that have changed since the last backup
-    tar -C / -cf tmp/changes.tar --newer-mtime='1 day ago' etc
+    tar -C / -cf ./changes.tar --newer-mtime='1 day ago' etc
 
     # install net-tools
 	yum install net-tools -y -q
