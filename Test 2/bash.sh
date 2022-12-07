@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # array of links to download
 links=(
@@ -15,7 +15,7 @@ fi
 
 # download dependencies to /tmp
 echo "Downloading dependencies"
-for link in links; do
+for link in "${links[@]}"; do
     curl -O $link
 done
 
