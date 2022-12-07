@@ -1,16 +1,23 @@
 #!/bin/bash
 
+# array of links to download
+declare -a links=(
+    "https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Utilities/fresh_check.sh"
+    "https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Test%202/host_info_t2.sh"
+    "https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm"
+)
+
 # make sure the script is running as root
 if [ "$(id -u)" != "0" ]; then
     echo "This script must be run as root" 1>&2
     exit 1
 fi
 
-# download dependencies
+# download dependencies to /tmp
 echo "Downloading dependencies"
-curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
-curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Utilities/fresh_check.sh
-curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Test%202/host_info_t2.sh
+for link in "${links[@]}"; do
+    curl -O $link
+done
 
 # install dependencies
 echo "Installing dependencies"
@@ -19,10 +26,10 @@ yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 # copy fresh_check.sh and host_info_t2.sh to s01
 echo "Copying scripts to s01"
 
-sshpass -p "adminpass" scp fresh_check.sh root@s01:/tmp/{fresh_check.sh,host_info_t2.sh}
+chmod +x ./fresh_check.sh
+chmod +x ./host_info_t2.sh
 
-chmod +x /tmp/fresh_check.sh
-chmod +x /tmp/host_info_t2.sh
+sshpass -p "adminpass" scp ./{fresh_check.sh,host_info_t2.sh} root@s01:/tmp/{fresh_check.sh,host_info_t2.sh}
 
 echo "Scripts copied to s01"
 
