@@ -108,9 +108,6 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Wait for the web server status to be active
     wait $!
-
-    # Generate an autoindex error
-    curl http://localhost
 EOF
 
 # Running scripts on s01
@@ -128,7 +125,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     sed -i 's/#input(type="imtcp" port="514")/input(type="imtcp" port="514")/g' /etc/rsyslog.conf
 
     # Modify rsyslog.conf on s01 to send all messages with a facility of local2 to /var/log/httpd_err
-    echo "local2.* /var/log/httpd_err" >>/etc/rsyslog.conf
+    echo "local2.* /var/log/httpd.err" >>/etc/rsyslog.conf
 
     # Restart the syslog
     systemctl restart rsyslog
