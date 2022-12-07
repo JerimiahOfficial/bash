@@ -109,7 +109,7 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     wait $!
 
     # Generate an autoindex error
-    curl -s http://localhost
+    curl -s -o /dev/null http://localhost
 EOF
 
 # Running scripts on s01
@@ -140,7 +140,7 @@ EOF
 echo "Running scripts on w01"
 sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Generate an autoindex error
-    curl -s http://localhost
+    curl -s -o /dev/null http://localhost
 
     # Generate logger messages for local2
     logger -p local2.info "This is a test message"
