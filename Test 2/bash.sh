@@ -1,5 +1,11 @@
 #!/bin/bash -e
 
+# make sure the script is running as root
+if [ "$(id -u)" != "0" ]; then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
 # download dependencies
 echo "Downloading dependencies"
 curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
@@ -8,8 +14,9 @@ curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Test%202/ho
 
 # install dependencies
 echo "Installing dependencies"
-echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
+yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 
+# wait for sshpass to be installed
 while [ ! -f /usr/bin/sshpass ]; do
     sleep 1
 done
@@ -74,46 +81,45 @@ EOF
 
 # Running scripts on w01
 echo "Running scripts on w01"
-sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
-    # Create the NFS share
-    mkdir -p /nfs/w01
 
-    # Add the NFS server to the fstab
-    echo "s01:/nfs/w01 /nfs/w01 nfs defaults 0 2" >>/etc/fstab
+# Create the NFS share
+mkdir -p /nfs/w01
 
-    # Mount the NFS share
-    mount -t nfs s01:/nfs/w01 /nfs/w01
+# Add the NFS server to the fstab
+echo "s01:/nfs/w01 /nfs/w01 nfs defaults 0 2" >>/etc/fstab
 
-    # Wait for the NFS share to be mounted
-    while [ ! -d /nfs/w01 ]; do
-        sleep 1
-    done
+# Mount the NFS share
+mount -t nfs s01:/nfs/w01 /nfs/w01
 
-    # Create a file on the NFS share
-    echo "test" >/nfs/w01/test.txt
+# Wait for the NFS share to be mounted
+while [ ! -d /nfs/w01 ]; do
+    sleep 1
+done
 
-    # Install the web server
-    yum install httpd -y -q
+# Create a file on the NFS share
+echo "test" >/nfs/w01/test.txt
 
-    # Wait for the web server to be installed
-    while [ ! -f /usr/sbin/httpd ]; do
-        sleep 1
-    done
+# Install the web server
+yum install httpd -y -q
 
-    # Configure the httpd.conf file redirecting the error log to the syslog
-    echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
+# Wait for the web server to be installed
+while [ ! -f /usr/sbin/httpd ]; do
+    sleep 1
+done
 
-    # Start the web server
-    systemctl start httpd
+# Configure the httpd.conf file redirecting the error log to the syslog
+echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
-    # Wait for the web server to start
-    while [ ! -f /usr/sbin/httpd ]; do
-        sleep 1
-    done
-    
-    # Generate an autoindex error
-    curl http://localhost
-EOF
+# Start the web server
+systemctl start httpd
+
+# Wait for the web server to start
+while [ ! -f /usr/sbin/httpd ]; do
+    sleep 1
+done
+
+# Generate an autoindex error
+curl http://localhost
 
 # Running scripts on s01
 echo "Running scripts on s01"
@@ -132,10 +138,9 @@ EOF
 
 # Running scripts on w01
 echo "Running scripts on w01"
-sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
-    # Generate an autoindex error
-    curl http://localhost
-EOF
+
+# Generate an autoindex error
+curl http://localhost
 
 # Running scripts on s01
 echo "Running scripts on s01"
@@ -155,7 +160,7 @@ EOF
 
 # copy the results
 echo "Copying results"
-scp -o StrictHostKeyChecking=no root@s01:/tmp/s01_report_t2.html /tmp >/dev/null
+scp -o StrictHostKeyChecking=no root@s01:/tmp/s01_report_t2.html /tmp
 
 # open the results
 echo "Opening results"
