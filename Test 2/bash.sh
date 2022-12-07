@@ -36,12 +36,11 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     ./fresh_check.sh
 
     # Create tar of /etc
-    tar -cvf /tmp/etc.tar /etc
+    tar -cvf ./etc.tar /etc
 
     # Create group and user for the NFS server
     groupadd w01users
-    useradd alice
-    usermod -aG w01users alice
+    useradd alice -g w01users
 
     # Store the uid and gid of the create group and user
     uid=\$(id -u alice)
