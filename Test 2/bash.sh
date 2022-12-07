@@ -127,6 +127,9 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     echo "Tcp port 514 is open"
 EOF
 
+# Wait for 30 seconds
+sleep 30
+
 # Running scripts on w01
 echo "Running scripts on w01"
 
