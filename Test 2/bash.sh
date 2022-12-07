@@ -119,12 +119,9 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # While tcp 514 is not open wait
     while [[ -z \$(netstat -tulpn | grep 514) ]]; do
-        sleep 1
+        sleep 30
         echo "Waiting for tcp 514 to open"
     done
-
-    # Sleep for 30 seconds
-    # sleep 30
 EOF
 
 # Running scripts on w01
