@@ -139,6 +139,11 @@ echo "Running scripts on w01"
 sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Generate an autoindex error
     curl http://localhost
+
+    # Generate logger messages for local2
+    logger -p local2.info "This is a test message"
+    logger -p local2.warning "This is a test message"
+    logger -p local2.err "This is a test message"
 EOF
 
 # Running scripts on s01
