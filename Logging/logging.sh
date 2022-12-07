@@ -94,6 +94,7 @@ logger -p authpriv.info "FM9: authpriv.info"
 logger -p authpriv.warning "FM10: authpriv.warn"
 logger -p authpriv.err "FM11: authpriv.err"
 
+# intall httpd on w01
 yum install httpd -y -q
 
 while [ ! -f /usr/sbin/httpd ]; do
