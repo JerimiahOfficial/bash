@@ -29,7 +29,6 @@ sshpass -p "adminpass" scp -o StrictHostKeyChecking=no -q ~/Downloads/{fresh_che
 # Running scripts on s01
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
-    # Change directories to /tmp
     cd /tmp
 
     # Run fresh_check.sh
@@ -125,7 +124,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     done
 
     # Sleep for 30 seconds
-    sleep 30
+    # sleep 30
 EOF
 
 # Running scripts on w01
@@ -142,7 +141,6 @@ logger -p local2.err "This is a test message"
 # Running scripts on s01
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
-    # Change directories /tmp
 	cd /tmp
 
     # Create an Incremental Backup named changes.tar with all files that have changed since the last backup
@@ -152,7 +150,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     ./host_info_t2.sh
 EOF
 
-# Change directories to /tmp
 cd /tmp
 
 # copy the results
