@@ -102,7 +102,7 @@ EOF
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # install net-tools
-	yum install net-tools -y -q
+    yum install net-tools -y -q
 
     # Open the firewall port for the syslog
     firewall-cmd --permanent --add-port=514/tcp
