@@ -103,6 +103,7 @@ done
 
 echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
+# start httpd on w01
 systemctl start httpd
 
 while [ "$(systemctl is-active httpd)" != "active" ]; do

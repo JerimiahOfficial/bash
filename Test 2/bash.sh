@@ -1,5 +1,9 @@
 #!/bin/bash -e
 
+# download dependencies
+echo "Downloading dependencies"
+curl -O https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm
+
 # Part B: Backup (2 points)
 # Create a tar archive named /tmp/etc.tar on s01 containing all files from the local /etc directory tree.
 tar -cvf /tmp/etc.tar /etc
@@ -35,3 +39,13 @@ echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 systemctl start httpd
 
 curl http://localhost
+
+echo "local2.* /var/log/httpd_err" >>/etc/rsyslog.conf
+
+systemctl restart rsyslog
+
+# Part E: Incremental Backup (2 points)
+# You made some changes to the contents of the /etc directory tree on s01 since the backup was created in section B. Create a tar archive named /tmp/changes.tar containing only the files that have changed since the tar backup from section B completed.
+tar -cvf /tmp/changes.tar -N /tmp/etc.tar /etc
+
+# Run the grading script
