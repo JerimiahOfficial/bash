@@ -16,7 +16,12 @@ done
 
 # copy fresh_check.sh and host_info_t2.sh to s01
 echo "Copying scripts to s01"
+
 sshpass -p "adminpass" scp fresh_check.sh root@s01:/tmp/{fresh_check.sh,host_info_t2.sh} >/dev/null
+
+chmod +x /tmp/fresh_check.sh
+chmod +x /tmp/host_info_t2.sh
+
 echo "Scripts copied to s01"
 
 # Running scripts on s01
