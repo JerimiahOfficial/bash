@@ -120,15 +120,14 @@ EOF
 
 # Running scripts on w01
 echo "Running scripts on w01"
-sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
-    # Generate an autoindex error
-    curl -s -o /dev/null http://localhost
 
-    # Generate logger messages for local2
-    logger -p local2.info "This is a test message"
-    logger -p local2.warning "This is a test message"
-    logger -p local2.err "This is a test message"
-EOF
+# Generate an autoindex error
+curl -s -o /dev/null http://localhost
+
+# Generate logger messages for local2
+logger -p local2.info "This is a test message"
+logger -p local2.warning "This is a test message"
+logger -p local2.err "This is a test message"
 
 # Running scripts on s01
 echo "Running scripts on s01"
