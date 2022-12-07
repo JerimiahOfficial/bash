@@ -144,6 +144,9 @@ EOF
 # Running scripts on s01
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    # Change directories /tmp
+	cd /tmp
+
     # Create an Incremental Backup named changes.tar with all files that have changed since the last backup
     tar -C / -cf tmp/changes.tar --newer-mtime='1 day ago' etc
 
@@ -152,9 +155,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Wait for the installation to finish
     wait $!
-
-    # Change directories /tmp
-	cd /tmp
 
     # Run the grading script
     ./host_info_t2.sh
