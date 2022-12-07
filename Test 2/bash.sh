@@ -44,7 +44,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     chown alice:w01users /nfs/w01
     chmod 2777 /nfs/w01
 
-    echo "/nfs/w01 *(rw,sync,all_squash,anonuid=\$uid,anongid=\$gid)" >>/etc/exports
+    echo "/nfs/w01 w01(rw,sync,all_squash,anonuid=\$uid,anongid=\$gid)" >>/etc/exports
 
     systemctl enable --now nfs-server
 EOF
