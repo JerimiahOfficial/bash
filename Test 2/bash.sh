@@ -27,8 +27,11 @@ echo "Scripts copied to s01"
 # Running scripts on s01
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    # Change directories to /tmp
+    cd /tmp
+
     # Run fresh_check.sh
-    /tmp/fresh_check.sh
+    ./fresh_check.sh
 
     # Create tar of /etc
     tar -cvf /tmp/etc.tar /etc
