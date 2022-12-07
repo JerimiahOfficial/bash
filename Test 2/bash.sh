@@ -109,13 +109,13 @@ cd /tmp
 echo "Copying results"
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no -q root@s01:/tmp/s01_report_t2.html /tmp
 
-echo "Opening results"
-firefox ./s01_report_t2.html &
-disown
-
 end=$(date +%s)
 runtime=$((end - start))
 echo "Time taken: $runtime seconds"
+
+echo "Opening results"
+firefox ./s01_report_t2.html &
+disown
 
 # exit
 exit 0
