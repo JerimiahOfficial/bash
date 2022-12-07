@@ -17,9 +17,6 @@ done
 echo "Installing dependencies"
 echo "userpass" | sudo -S yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 
-# wait for the install to finish
-wait $!
-
 # Notify that scripts are being copied to s01
 echo "Copying scripts to s01"
 
@@ -59,8 +56,10 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     firewall-cmd --permanent --add-service=nfs3
     firewall-cmd --reload
 
-    # Wait for the firewall to reload
-    wait $!
+    # Check if the firewall is active using systemctl is-active
+    while [ \$(systemctl is-active firewalld) != "active" ]; do
+        sleep 1
+    done
 
     # Create the NFS share
     mkdir -p /nfs/w01
@@ -99,14 +98,18 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Restart the syslog
     systemctl restart rsyslog
 
-    # Wait for the syslog to restart
-    wait $!
+    # Check if the rsyslog service is active using systemctl is-active
+    while [ \$(systemctl is-active rsyslog) != "active" ]; do
+        sleep 1
+    done
 
     # Start the web server
     systemctl start httpd
 
-    # Wait for the web server status to be active
-    wait $!
+    # Check if the httpd service is active using systemctl is-active
+    while [ \$(systemctl is-active httpd) != "active" ]; do
+        sleep 1
+    done
 
     # Generate an autoindex error
     curl -s -o /dev/null http://localhost
@@ -119,8 +122,10 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     firewall-cmd --permanent --add-port=514/tcp
     firewall-cmd --reload
 
-    # Wait for the firewall to reload
-    wait $!
+    # Check if the firewall is active using systemctl is-active
+    while [ \$(systemctl is-active firewalld) != "active" ]; do
+        sleep 1
+    done
 
     # Uncomment the tcp config in the rsyslog.conf file
     sed -i 's/#module(load="imtcp")/module(load="imtcp")/g' /etc/rsyslog.conf
@@ -132,8 +137,10 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Restart the syslog
     systemctl restart rsyslog
 
-    # Wait for the syslog to restart
-    wait $!
+    # Check if the rsyslog service is active using systemctl is-active
+    while [ \$(systemctl is-active rsyslog) != "active" ]; do
+        sleep 1
+    done
 EOF
 
 # Running scripts on w01
@@ -159,9 +166,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # install net-tools
 	yum install net-tools -y -q
-
-    # wait for the install to finish
-    wait $!
 
     # Run the grading script
     ./host_info_t2.sh
