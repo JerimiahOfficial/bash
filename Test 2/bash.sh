@@ -15,7 +15,7 @@ done
 
 # install dependencies
 echo "Installing dependencies"
-yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
+echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 
 # copy fresh_check.sh and host_info_t2.sh to s01
 echo "Copying scripts to s01"
