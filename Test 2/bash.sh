@@ -94,8 +94,8 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Configure the httpd.conf file redirecting the error log to the syslog
     sed -i 's/ErrorLog "logs\/error_log"/ErrorLog syslog:local2/g' /etc/httpd/conf/httpd.conf
 
-    # Send the local2 log to the s01 syslog
-    echo "local2.* @@s01:514" >>/etc/rsyslog.conf
+    # Modify rsyslog.conf on w01 to send all messages with a facility of local2 to s01
+    echo "local2.* @@s01" >>/etc/rsyslog.conf
 
     # Restart the syslog
     systemctl restart rsyslog
@@ -127,7 +127,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     sed -i 's/#module(load="imtcp")/module(load="imtcp")/g' /etc/rsyslog.conf
     sed -i 's/#input(type="imtcp" port="514")/input(type="imtcp" port="514")/g' /etc/rsyslog.conf
 
-    # Configure s01 to send the error log to the syslog
+    # Modify rsyslog.conf on s01 to send all messages with a facility of local2 to /var/log/httpd_err
     echo "local2.* /var/log/httpd_err" >>/etc/rsyslog.conf
 
     # Restart the syslog
