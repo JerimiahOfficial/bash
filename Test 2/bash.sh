@@ -10,7 +10,7 @@ links=(
 # download dependencies to /tmp
 echo "Downloading dependencies"
 for link in "${links[@]}"; do
-    curl -O $link
+    curl -s -O $link
 done
 
 # install dependencies
@@ -107,6 +107,9 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Wait for the web server status to be active
     wait $!
+
+    # Generate an autoindex error
+    curl -s http://localhost
 EOF
 
 # Running scripts on s01
@@ -137,7 +140,7 @@ EOF
 echo "Running scripts on w01"
 sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Generate an autoindex error
-    curl http://localhost
+    curl -s http://localhost
 
     # Generate logger messages for local2
     logger -p local2.info "This is a test message"
