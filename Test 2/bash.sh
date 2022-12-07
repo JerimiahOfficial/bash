@@ -124,7 +124,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     sed -i 's/#module(load="imtcp")/module(load="imtcp")/g' /etc/rsyslog.conf
     sed -i 's/#input(type="imtcp" port="514")/input(type="imtcp" port="514")/g' /etc/rsyslog.conf
 
-    # Modify rsyslog.conf on s01 to send all messages with a facility of local2 to /var/log/httpd_err
+    # Modify rsyslog.conf on s01 to send all messages with a facility of local2 to /var/log/httpd.err
     echo "local2.* /var/log/httpd.err" >>/etc/rsyslog.conf
 
     # Restart the syslog
