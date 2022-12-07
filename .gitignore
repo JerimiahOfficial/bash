@@ -1,2 +1,2 @@
-
-Logging/regular.sh
+# ignore every single file with the name 'regular.sh'
+**/regular.sh

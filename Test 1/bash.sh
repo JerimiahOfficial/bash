@@ -26,7 +26,6 @@ sshpass -p "adminpass" scp -o StrictHostKeyChecking=no ~/Downloads/{wget*,host*,
 
 # sshpass into s01 and run the following commands
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
-    # Run fresh_check.sh in /tmp
     cd /tmp
 
     # Chmod +rwx for fresh_check.sh, host_info_t1.sh, wget-1.19.5-10.el8.x86_64.rpm
