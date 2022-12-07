@@ -95,9 +95,6 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Start the web server
     systemctl start httpd
-
-    # Generate an autoindex error
-    curl -s -o /dev/null http://localhost
 EOF
 
 # Running scripts on s01
