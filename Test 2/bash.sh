@@ -112,12 +112,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     systemctl restart rsyslog
 EOF
 
-# Check log data from rsyslog
-while [tail -n 1 /var/log/httpd.err | grep resumed -eq "resumed"]; do
-    sleep 1
-    echo "Waiting for rsyslog to resume"
-done
-
 # Running scripts on w01
 echo "Running scripts on w01"
 sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
