@@ -97,6 +97,9 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Send the local2 log to the s01 syslog
     echo "local2.* @@s01:514" >>/etc/rsyslog.conf
 
+    # Restart the syslog
+    systemctl restart rsyslog
+
     # Start the web server
     systemctl start httpd
 
