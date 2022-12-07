@@ -116,6 +116,13 @@ EOF
 # Running scripts on s01
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    # Open the firewall port for the syslog
+    firewall-cmd --permanent --add-port=514/tcp
+    firewall-cmd --reload
+
+    # Wait for the firewall to reload
+    wait $!
+
     # Uncomment the tcp config in the rsyslog.conf file
     sed -i 's/#module(load="imtcp")/module(load="imtcp")/g' /etc/rsyslog.conf
     sed -i 's/#input(type="imtcp" port="514")/input(type="imtcp" port="514")/g' /etc/rsyslog.conf
