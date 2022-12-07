@@ -13,7 +13,7 @@ for link in "${links[@]}"; do
 done
 
 echo "Installing dependencies"
-echo "userpass" | sudo -S yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
+echo "userpass" | sudo -n -S yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 echo "Copying scripts to s01"
 
 chmod +x ./fresh_check.sh ./host_info_t2.sh
