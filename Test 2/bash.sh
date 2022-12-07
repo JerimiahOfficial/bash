@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 # make sure the script is running as root
 if [ "$(id -u)" != "0" ]; then
@@ -15,11 +15,6 @@ curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Test%202/ho
 # install dependencies
 echo "Installing dependencies"
 yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
-
-# wait for sshpass to be installed
-while [ ! -f /usr/bin/sshpass ]; do
-    sleep 1
-done
 
 # copy fresh_check.sh and host_info_t2.sh to s01
 echo "Copying scripts to s01"
@@ -55,17 +50,12 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Install NFS server
     yum install nfs-utils -y -q
 
-    # Wait for the NFS server to be installed
-    while [ ! -f /usr/sbin/exportfs ]; do
-        sleep 1
-    done
-
     # Configure the firewall
     firewall-cmd --permanent --add-service=nfs3
     firewall-cmd --reload
 
-    # Wait for the firewall to finish reloading
-    while [ ! -f /usr/bin/firewall-cmd ]; do
+    # Wait for the firewall status to be active
+    while [ ! {firewall-cmd --state} ]; do
         sleep 1
     done
 
@@ -91,21 +81,11 @@ echo "s01:/nfs/w01 /nfs/w01 nfs defaults 0 2" >>/etc/fstab
 # Mount the NFS share
 mount -t nfs s01:/nfs/w01 /nfs/w01
 
-# Wait for the NFS share to be mounted
-while [ ! -d /nfs/w01 ]; do
-    sleep 1
-done
-
 # Create a file on the NFS share
 echo "test" >/nfs/w01/test.txt
 
 # Install the web server
 yum install httpd -y -q
-
-# Wait for the web server to be installed
-while [ ! -f /usr/sbin/httpd ]; do
-    sleep 1
-done
 
 # Configure the httpd.conf file redirecting the error log to the syslog
 echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
@@ -113,8 +93,8 @@ echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 # Start the web server
 systemctl start httpd
 
-# Wait for the web server to start
-while [ ! -f /usr/sbin/httpd ]; do
+# Wait for the web server status to be active
+while [ ! {systemctl status httpd | grep "active (running)"} ]; do
     sleep 1
 done
 
@@ -131,7 +111,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     systemctl restart rsyslog
 
     # Wait for the syslog to restart
-    while [ ! -f /usr/sbin/rsyslogd ]; do
+    while [ ! {systemctl status rsyslog | grep "active (running)"} ]; do
         sleep 1
     done
 EOF
