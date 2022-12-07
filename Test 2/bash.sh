@@ -40,7 +40,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     ./fresh_check.sh
 
     # Create tar of /etc
-    tar -cvf ./etc.tar /etc
+    tar -cf ./etc.tar /etc
 
     # Create group and user for the NFS server
     groupadd w01users
@@ -148,7 +148,7 @@ EOF
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Create an Incremental Backup named changes.tar with all files that have changed since the last backup
-    tar -cvf /tmp/changes.tar --newer-mtime='1 day ago' /etc
+    tar -cf /tmp/changes.tar --newer-mtime='1 day ago' /etc
 
     # install net-tools
 	yum install net-tools -y -q
