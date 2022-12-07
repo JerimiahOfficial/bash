@@ -71,35 +71,36 @@ EOF
 
 # Running scripts on w01
 echo "Running scripts on w01"
+sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    # Create the NFS share
+    mkdir -p /nfs/w01
 
-# Create the NFS share
-mkdir -p /nfs/w01
+    # Add the NFS server to the fstab
+    echo "s01:/nfs/w01 /nfs/w01 nfs defaults 0 2" >>/etc/fstab
 
-# Add the NFS server to the fstab
-echo "s01:/nfs/w01 /nfs/w01 nfs defaults 0 2" >>/etc/fstab
+    # Mount the NFS share
+    mount -t nfs s01:/nfs/w01 /nfs/w01
 
-# Mount the NFS share
-mount -t nfs s01:/nfs/w01 /nfs/w01
+    # Create a file on the NFS share
+    echo "test" >/nfs/w01/test.txt
 
-# Create a file on the NFS share
-echo "test" >/nfs/w01/test.txt
+    # Install the web server
+    yum install httpd -y -q
 
-# Install the web server
-yum install httpd -y -q
+    # Configure the httpd.conf file redirecting the error log to the syslog
+    echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
-# Configure the httpd.conf file redirecting the error log to the syslog
-echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
+    # Start the web server
+    systemctl start httpd
 
-# Start the web server
-systemctl start httpd
+    # Wait for the web server status to be active
+    while [ ! {systemctl status httpd | grep "active (running)"} ]; do
+        sleep 1
+    done
 
-# Wait for the web server status to be active
-while [ ! {systemctl status httpd | grep "active (running)"} ]; do
-    sleep 1
-done
-
-# Generate an autoindex error
-curl http://localhost
+    # Generate an autoindex error
+    curl http://localhost
+EOF
 
 # Running scripts on s01
 echo "Running scripts on s01"
@@ -118,9 +119,10 @@ EOF
 
 # Running scripts on w01
 echo "Running scripts on w01"
-
-# Generate an autoindex error
-curl http://localhost
+sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    # Generate an autoindex error
+    curl http://localhost
+EOF
 
 # Running scripts on s01
 echo "Running scripts on s01"
@@ -138,13 +140,16 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     ./host_info_t2.sh
 EOF
 
+# Change directories to /tmp
+cd /tmp
+
 # copy the results
 echo "Copying results"
 scp -o StrictHostKeyChecking=no -q root@s01:/tmp/s01_report_t2.html /tmp
 
 # open the results
 echo "Opening results"
-firefox /tmp/s01_report_t2.html &
+firefox ./s01_report_t2.html &
 disown
 
 # exit
