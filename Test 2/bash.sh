@@ -49,9 +49,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Install NFS server
     yum install nfs-utils -y -q
 
-    # wait for the install to finish
-    wait $!
-
     # Configure the firewall
     firewall-cmd --permanent --add-service=nfs3
     firewall-cmd --reload
@@ -59,8 +56,12 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Create the NFS share
     mkdir -p /nfs/w01
 
+    # Change the ownership of the NFS share
+    chown alice:w01users /nfs/w01
+    chmod 2777 /nfs/w01
+
     # Configure the NFS share
-    echo "/nfs/w01 *(rw,sync,no_root_squash,no_all_squash,anonuid=\$uid,anongid=\$gid)" >>/etc/exports
+    echo "/nfs/w01 *(rw,sync,all_squash,anonuid=\$uid,anongid=\$gid)" >>/etc/exports
 
     # Enable the NFS server
     systemctl enable --now nfs-server
@@ -114,6 +115,9 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Restart the syslog
     systemctl restart rsyslog
 EOF
+
+# Sleep for 30 seconds
+sleep 30
 
 # Running scripts on w01
 echo "Running scripts on w01"
