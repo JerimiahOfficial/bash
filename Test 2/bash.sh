@@ -7,12 +7,6 @@ links=(
     "https://rpmfind.net/linux/dag/redhat/el7/en/x86_64/dag/RPMS/sshpass-1.05-1.el7.rf.x86_64.rpm"
 )
 
-# make sure the script is running as root
-if [ "$(id -u)" != "0" ]; then
-    echo "This script must be run as root" 1>&2
-    exit 1
-fi
-
 # download dependencies to /tmp
 echo "Downloading dependencies"
 for link in "${links[@]}"; do
@@ -29,7 +23,7 @@ echo "Copying scripts to s01"
 chmod +x ./fresh_check.sh
 chmod +x ./host_info_t2.sh
 
-sshpass -p "adminpass" scp -o StrictHostKeyChecking=no -q /home/alice/Downloads/{fresh_check.sh,host_info_t2.sh} root@s01:/tmp/
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no -q ~/Downloads/{fresh_check.sh,host_info_t2.sh} root@s01:/tmp/
 
 echo "Scripts copied to s01"
 
