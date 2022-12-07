@@ -114,6 +114,13 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Restart the syslog
     systemctl restart rsyslog
+
+    # test if tcp port 514 is open
+    if [[ $(ss -tulpn | grep 514) ]]; then
+        echo "TCP port 514 is open"
+    else
+        echo "TCP port 514 is not open"
+    fi
 EOF
 
 # Sleep for 30 seconds
