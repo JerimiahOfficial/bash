@@ -56,11 +56,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     firewall-cmd --permanent --add-service=nfs3
     firewall-cmd --reload
 
-    # Check if the firewall is active using systemctl is-active
-    while [ \$(systemctl is-active firewalld) != "active" ]; do
-        sleep 1
-    done
-
     # Create the NFS share
     mkdir -p /nfs/w01
 
@@ -98,18 +93,8 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Restart the syslog
     systemctl restart rsyslog
 
-    # Check if the rsyslog service is active using systemctl is-active
-    while [ \$(systemctl is-active rsyslog) != "active" ]; do
-        sleep 1
-    done
-
     # Start the web server
     systemctl start httpd
-
-    # Check if the httpd service is active using systemctl is-active
-    while [ \$(systemctl is-active httpd) != "active" ]; do
-        sleep 1
-    done
 
     # Generate an autoindex error
     curl -s -o /dev/null http://localhost
@@ -122,11 +107,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     firewall-cmd --permanent --add-port=514/tcp
     firewall-cmd --reload
 
-    # Check if the firewall is active using systemctl is-active
-    while [ \$(systemctl is-active firewalld) != "active" ]; do
-        sleep 1
-    done
-
     # Uncomment the tcp config in the rsyslog.conf file
     sed -i 's/#module(load="imtcp")/module(load="imtcp")/g' /etc/rsyslog.conf
     sed -i 's/#input(type="imtcp" port="514")/input(type="imtcp" port="514")/g' /etc/rsyslog.conf
@@ -136,11 +116,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Restart the syslog
     systemctl restart rsyslog
-
-    # Check if the rsyslog service is active using systemctl is-active
-    while [ \$(systemctl is-active rsyslog) != "active" ]; do
-        sleep 1
-    done
 EOF
 
 # Running scripts on w01
@@ -185,4 +160,4 @@ disown
 
 # exit
 echo "Script finished"
-exit
+exit 0
