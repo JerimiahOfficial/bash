@@ -146,7 +146,7 @@ EOF
 
 # copy the results
 echo "Copying results"
-scp -o StrictHostKeyChecking=no root@s01:/tmp/s01_report_t2.html /tmp
+scp -o StrictHostKeyChecking=no -q root@s01:/tmp/s01_report_t2.html /tmp
 
 # open the results
 echo "Opening results"
