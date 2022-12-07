@@ -107,6 +107,10 @@ EOF
 # Running scripts on s01
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    # Uncomment the tcp config in the rsyslog.conf file
+    sed -i 's/#module(load="imtcp")/module(load="imtcp")/g' /etc/rsyslog.conf
+    sed -i 's/#input(type="imtcp" port="514")/input(type="imtcp" port="514")/g' /etc/rsyslog.conf
+
     # Configure s01 to send the error log to the syslog
     echo "local2.* /var/log/httpd_err" >>/etc/rsyslog.conf
 
@@ -148,7 +152,7 @@ cd /tmp
 
 # copy the results
 echo "Copying results"
-scp -o StrictHostKeyChecking=no -q root@s01:/tmp/s01_report_t2.html /tmp
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no -q root@s01:/tmp/s01_report_t2.html /tmp
 
 # open the results
 echo "Opening results"
