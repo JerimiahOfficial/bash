@@ -88,7 +88,7 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     systemctl restart rsyslog
 
-    curl http://localhost
+    curl -s -o /dev/null http://localhost
 
     logger -p local2.info "This is a test message"
     logger -p local2.warning "This is a test message"
