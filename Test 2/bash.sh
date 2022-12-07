@@ -17,6 +17,9 @@ done
 echo "Installing dependencies"
 echo "userpass" | sudo -S yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 
+# Wait for the dependencies to install
+wait $!
+
 # copy fresh_check.sh and host_info_t2.sh to s01
 echo "Copying scripts to s01"
 
@@ -54,10 +57,8 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     firewall-cmd --permanent --add-service=nfs3
     firewall-cmd --reload
 
-    # Wait for the firewall state is running
-    while [ ! {firewall-cmd --state | grep "running"} ]; do
-        sleep 1
-    done
+    # Wait for the firewall to reload
+    wait $!
 
     # Create the NFS share
     mkdir -p /nfs/w01
@@ -87,6 +88,9 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Install the web server
     yum install httpd -y -q
 
+    # Wait for the installation to finish
+    wait $!
+
     # Configure the httpd.conf file redirecting the error log to the syslog
     echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
 
@@ -94,9 +98,7 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     systemctl start httpd
 
     # Wait for the web server status to be active
-    while [ ! {systemctl status httpd | grep "active (running)"} ]; do
-        sleep 1
-    done
+    wait $!
 
     # Generate an autoindex error
     curl http://localhost
@@ -112,9 +114,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     systemctl restart rsyslog
 
     # Wait for the syslog to restart
-    while [ ! {systemctl status rsyslog | grep "active (running)"} ]; do
-        sleep 1
-    done
+    wait $!
 EOF
 
 # Running scripts on w01
@@ -132,6 +132,9 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # install net-tools
 	yum install net-tools -y -q
+
+    # Wait for the installation to finish
+    wait $!
 
     # Change directories /tmp
 	cd /tmp
