@@ -29,7 +29,7 @@ echo "Copying scripts to s01"
 chmod +x ./fresh_check.sh
 chmod +x ./host_info_t2.sh
 
-sshpass -p "adminpass" scp ./{fresh_check.sh,host_info_t2.sh} root@s01:/tmp/{fresh_check.sh,host_info_t2.sh}
+sshpass -p "adminpass" scp -o StrictHostKeyChecking=no -q ~/Downloads/{fresh_check.sh,host_info_t2.sh} root@s01:/tmp/
 
 echo "Scripts copied to s01"
 
