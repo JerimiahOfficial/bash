@@ -85,7 +85,7 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     echo "test" >/nfs/w01/test.txt
 
     # Install the web server
-    yum install httpd -y
+    yum install httpd -y -q
 
     # Wait for the web server to be installed
     while [ ! -f /usr/sbin/httpd ]; do
@@ -135,8 +135,14 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Create an Incremental Backup named changes.tar with all files that have changed since the last backup
     tar -cvf /tmp/changes.tar --newer-mtime='1 day ago' /etc
 
+    # install net-tools
+	yum install net-tools -y -q
+
+    # cd /tmp
+	cd /tmp
+
     # Run the grading script
-    /tmp/host_info_t2.sh
+    ./host_info_t2.sh
 EOF
 
 # copy the results
