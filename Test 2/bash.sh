@@ -87,12 +87,6 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Configure the httpd.conf file redirecting the error log to the syslog
     sed -i 's/ErrorLog "logs\/error_log"/ErrorLog syslog:local2/g' /etc/httpd/conf/httpd.conf
 
-    # Modify rsyslog.conf on w01 to send all messages with a facility of local2 to s01
-    echo "local2.* @@s01" >>/etc/rsyslog.conf
-
-    # Restart the syslog
-    systemctl restart rsyslog
-
     # Start the web server
     systemctl start httpd
 EOF
@@ -116,15 +110,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Restart the syslog
     systemctl restart rsyslog
-
-    # While tcp 514 is not open wait
-    while [[ -z \$(netstat -tulpn | grep 514) ]]; do
-        sleep 1
-        echo "Waiting for tcp 514 to open"
-    done
-
-    # Notify that tcp 514 is open
-    echo "Tcp port 514 is open"
 EOF
 
 # Check log data from rsyslog
@@ -135,14 +120,21 @@ done
 
 # Running scripts on w01
 echo "Running scripts on w01"
+sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    # Modify rsyslog.conf on w01 to send all messages with a facility of local2 to s01
+    echo "local2.* @@s01" >>/etc/rsyslog.conf
 
-# Generate an autoindex error
-curl -s -o /dev/null http://localhost
+    # Restart the syslog
+    systemctl restart rsyslog
 
-# Generate logger messages for local2
-logger -p local2.info "This is a test message"
-logger -p local2.warning "This is a test message"
-logger -p local2.err "This is a test message"
+    # Generate an autoindex error
+    curl -s -o /dev/null http://localhost
+
+    # Generate logger messages for local2
+    logger -p local2.info "This is a test message"
+    logger -p local2.warning "This is a test message"
+    logger -p local2.err "This is a test message"
+EOF
 
 # Running scripts on s01
 echo "Running scripts on s01"
