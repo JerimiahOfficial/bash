@@ -8,7 +8,7 @@ curl -O https://raw.githubusercontent.com/JerimiahOfficial/bash/main/Test%202/ho
 
 # install dependencies
 echo "Installing dependencies"
-echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q >/dev/null
+echo "userpass" | sudo -S -k yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 
 while [ ! -f /usr/bin/sshpass ]; do
     sleep 1
@@ -17,7 +17,7 @@ done
 # copy fresh_check.sh and host_info_t2.sh to s01
 echo "Copying scripts to s01"
 
-sshpass -p "adminpass" scp fresh_check.sh root@s01:/tmp/{fresh_check.sh,host_info_t2.sh} >/dev/null
+sshpass -p "adminpass" scp fresh_check.sh root@s01:/tmp/{fresh_check.sh,host_info_t2.sh}
 
 chmod +x /tmp/fresh_check.sh
 chmod +x /tmp/host_info_t2.sh
