@@ -92,7 +92,7 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     wait $!
 
     # Configure the httpd.conf file redirecting the error log to the syslog
-    echo "ErrorLog syslog:local2" >>/etc/httpd/conf/httpd.conf
+    sed -i 's/ErrorLog "logs\/error_log"/ErrorLog syslog:local2/g' /etc/httpd/conf/httpd.conf
 
     # Send the local2 log to the s01 syslog
     echo "local2.* @@s01:514" >>/etc/rsyslog.conf
