@@ -138,7 +138,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # install net-tools
 	yum install net-tools -y -q
 
-    # cd /tmp
+    # Change directories /tmp
 	cd /tmp
 
     # Run the grading script
