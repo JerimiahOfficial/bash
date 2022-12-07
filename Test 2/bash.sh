@@ -45,7 +45,7 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Store the uid and gid of the create group and user
     uid=\$(id -u alice)
-    gid=\$(id -g w01users)
+    gid=\$(getent group w01users | cut -d: -f3)
 
     # Install NFS server
     yum install nfs-utils -y -q
@@ -54,8 +54,8 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     firewall-cmd --permanent --add-service=nfs3
     firewall-cmd --reload
 
-    # Wait for the firewall status to be active
-    while [ ! {firewall-cmd --state} ]; do
+    # Wait for the firewall state is running
+    while [ ! {firewall-cmd --state | grep "running"} ]; do
         sleep 1
     done
 
