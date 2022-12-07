@@ -17,18 +17,14 @@ done
 echo "Installing dependencies"
 echo "userpass" | sudo -S yum install sshpass-1.05-1.el7.rf.x86_64.rpm -y -q
 
-# Wait for the dependencies to install
-wait $!
-
-# copy fresh_check.sh and host_info_t2.sh to s01
+# Notify that scripts are being copied to s01
 echo "Copying scripts to s01"
 
-chmod +x ./fresh_check.sh
-chmod +x ./host_info_t2.sh
+# Chmod the scripts
+chmod +x ./fresh_check.sh ./host_info_t2.sh
 
+# Copy the scripts
 sshpass -p "adminpass" scp -o StrictHostKeyChecking=no -q ~/Downloads/{fresh_check.sh,host_info_t2.sh} root@s01:/tmp/
-
-echo "Scripts copied to s01"
 
 # Running scripts on s01
 echo "Running scripts on s01"
@@ -87,9 +83,6 @@ sshpass -p "adminpass" ssh root@w01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Install the web server
     yum install httpd -y -q
-
-    # Wait for the installation to finish
-    wait $!
 
     # Configure the httpd.conf file redirecting the error log to the syslog
     sed -i 's/ErrorLog "logs\/error_log"/ErrorLog syslog:local2/g' /etc/httpd/conf/httpd.conf
@@ -157,9 +150,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # install net-tools
 	yum install net-tools -y -q
-
-    # Wait for the installation to finish
-    wait $!
 
     # Run the grading script
     ./host_info_t2.sh
