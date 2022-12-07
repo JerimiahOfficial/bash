@@ -101,6 +101,9 @@ EOF
 # Running scripts on s01
 echo "Running scripts on s01"
 sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
+    # install net-tools
+	yum install net-tools -y -q
+
     # Open the firewall port for the syslog
     firewall-cmd --permanent --add-port=514/tcp
     firewall-cmd --reload
@@ -115,8 +118,8 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
     # Restart the syslog
     systemctl restart rsyslog
 
-    # test if tcp port 514 is open
-    while ! nc -z localhost 514; do
+    # While tcp 514 is not open wait
+    while [[ -z \$(netstat -tulpn | grep 514) ]]; do
         sleep 1
     done
 EOF
@@ -143,9 +146,6 @@ sshpass -p "adminpass" ssh root@s01 -o StrictHostKeyChecking=no /bin/sh <<-EOF
 
     # Create an Incremental Backup named changes.tar with all files that have changed since the last backup
     tar -C / -cf ./changes.tar --newer-mtime='1 day ago' etc
-
-    # install net-tools
-	yum install net-tools -y -q
 
     # Run the grading script
     ./host_info_t2.sh
