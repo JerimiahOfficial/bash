@@ -111,7 +111,7 @@ sshpass -p "adminpass" scp -o StrictHostKeyChecking=no -q root@s01:/tmp/s01_repo
 
 end=$(date +%s)
 runtime=$((end - start))
-echo "Time taken: $runtime seconds"
+echo "Duration: $runtime seconds"
 
 echo "Opening results"
 firefox ./s01_report_t2.html &
